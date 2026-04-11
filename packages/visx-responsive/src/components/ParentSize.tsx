@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode, HTMLAttributes } from 'react';
+import { useCallback, useState } from 'react';
 import type { ParentSizeState, UseParentSizeConfig } from '../hooks/useParentSize';
 import useParentSize from '../hooks/useParentSize';
+import { assignRef } from '../utils/mergeRefs';
 
 export type ParentSizeProvidedProps = ParentSizeState & {
   ref: HTMLDivElement | null;
@@ -31,6 +33,7 @@ export default function ParentSize({
   parentSizeStyles = defaultParentSizeStyles,
   enableDebounceLeadingCall = true,
   resizeObserverPolyfill,
+  ref: parentRefProp,
   ...restProps
 }: ParentSizeProps & Omit<HTMLAttributes<HTMLDivElement>, keyof ParentSizeProps>) {
   const { parentRef, resize, ...dimensions } = useParentSize({
@@ -39,13 +42,24 @@ export default function ParentSize({
     ignoreDimensions,
     enableDebounceLeadingCall,
     resizeObserverPolyfill,
+    ref: parentRefProp,
   });
 
+  const [measuredElement, setMeasuredElement] = useState<HTMLDivElement | null>(null);
+
+  const setContainerRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      setMeasuredElement(node);
+      assignRef(parentRef, node);
+    },
+    [parentRef],
+  );
+
   return (
-    <div style={parentSizeStyles} ref={parentRef} className={className} {...restProps}>
+    <div style={parentSizeStyles} ref={setContainerRef} className={className} {...restProps}>
       {children({
         ...dimensions,
-        ref: parentRef.current,
+        ref: measuredElement,
         resize,
       })}
     </div>

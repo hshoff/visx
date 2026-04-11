@@ -1,7 +1,8 @@
 import debounce from 'lodash/debounce';
-import type { RefObject } from 'react';
+import type { Ref, RefCallback, RefObject } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DebounceSettings, PrivateWindow, ResizeObserverPolyfill } from '../types';
+import { mergeRefs } from '../utils/mergeRefs';
 
 export type ParentSizeState = {
   width: number;
@@ -10,17 +11,22 @@ export type ParentSizeState = {
   left: number;
 };
 
-export type UseParentSizeConfig = {
+export type UseParentSizeConfig<T extends HTMLElement = HTMLDivElement> = {
   /** Initial size before measuring the parent. */
   initialSize?: Partial<ParentSizeState>;
   /** Optionally inject a ResizeObserver polyfill, else this *must* be globally available. */
   resizeObserverPolyfill?: ResizeObserverPolyfill;
   /** Optional dimensions provided won't trigger a state change when changed. */
   ignoreDimensions?: keyof ParentSizeState | (keyof ParentSizeState)[];
+  /**
+   * Optional ref to the measured element. When set, `parentRef` merges this ref with the internal
+   * observer target so both stay assigned to the same node.
+   */
+  ref?: Ref<T | null>;
 } & DebounceSettings;
 
 type UseParentSizeResult<T extends HTMLElement = HTMLDivElement> = ParentSizeState & {
-  parentRef: RefObject<T | null>;
+  parentRef: RefObject<T | null> | RefCallback<T>;
   resize: (state: ParentSizeState) => void;
 };
 
@@ -38,9 +44,15 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
   ignoreDimensions = defaultIgnoreDimensions,
   enableDebounceLeadingCall = true,
   resizeObserverPolyfill,
-}: UseParentSizeConfig = {}): UseParentSizeResult<T> {
-  const parentRef = useRef<T>(null);
+  ref: externalRef,
+}: UseParentSizeConfig<T> = {}): UseParentSizeResult<T> {
+  const observerTargetRef = useRef<T | null>(null);
   const animationFrameID = useRef(0);
+
+  const parentRef = useMemo((): RefObject<T | null> | RefCallback<T> => {
+    if (externalRef == null) return observerTargetRef;
+    return mergeRefs<T>(observerTargetRef, externalRef);
+  }, [externalRef]);
 
   const [state, setState] = useState<ParentSizeState>({ ...defaultInitialSize, ...initialSize });
 
@@ -74,14 +86,15 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
         });
       });
     });
-    if (parentRef.current) observer.observe(parentRef.current);
+    const target = observerTargetRef.current;
+    if (target) observer.observe(target);
 
     return () => {
       window.cancelAnimationFrame(animationFrameID.current);
       observer.disconnect();
       resize.cancel();
     };
-  }, [resize, resizeObserverPolyfill]);
+  }, [resize, resizeObserverPolyfill, parentRef]);
 
   return { parentRef, resize, ...state };
 }
