@@ -1,6 +1,10 @@
 import debounce from 'lodash/debounce';
 import { Component } from 'react';
 import type { ComponentType } from 'react';
+import {
+  defaultParentSizeMeasureLayerStyles,
+  defaultParentSizeOuterStyles,
+} from '../parentSizeWrapperStyles';
 import type {
   DebounceSettings,
   Simplify,
@@ -8,8 +12,6 @@ import type {
   ResizeObserverPolyfill,
   ResizeObserver,
 } from '../types';
-
-const CONTAINER_STYLES = { width: '100%', height: '100%' };
 
 /**
  * @deprecated
@@ -97,14 +99,16 @@ export default function withParentSize<P extends WithParentSizeProvidedProps>(
       const { initialWidth, initialHeight } = this.props;
       const { parentWidth = initialWidth, parentHeight = initialHeight } = this.state;
       return (
-        <div style={CONTAINER_STYLES} ref={this.setRef}>
-          {parentWidth != null && parentHeight != null && (
-            <BaseComponent
-              parentWidth={parentWidth}
-              parentHeight={parentHeight}
-              {...(this.props as P)}
-            />
-          )}
+        <div style={defaultParentSizeOuterStyles}>
+          <div style={defaultParentSizeMeasureLayerStyles} ref={this.setRef}>
+            {parentWidth != null && parentHeight != null && (
+              <BaseComponent
+                parentWidth={parentWidth}
+                parentHeight={parentHeight}
+                {...(this.props as P)}
+              />
+            )}
+          </div>
         </div>
       );
     }

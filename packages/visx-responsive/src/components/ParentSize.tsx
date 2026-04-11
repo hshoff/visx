@@ -1,4 +1,8 @@
 import type { CSSProperties, ReactNode, HTMLAttributes } from 'react';
+import {
+  defaultParentSizeMeasureLayerStyles,
+  defaultParentSizeOuterStyles,
+} from '../parentSizeWrapperStyles';
 import type { ParentSizeState, UseParentSizeConfig } from '../hooks/useParentSize';
 import useParentSize from '../hooks/useParentSize';
 
@@ -11,16 +15,14 @@ export type ParentSizeProps = {
   /** Optional `className` to add to the parent `div` wrapper used for size measurement. */
   className?: string;
   /**
-   * @deprecated - use `style` prop as all other props are passed directly to the parent `div`.
+   * @deprecated - use `style` prop as all other props are passed directly to the outer wrapper `div`.
    * @TODO remove in the next major version.
-   * Optional `style` object to apply to the parent `div` wrapper used for size measurement.
+   * Optional `style` merged onto the outer wrapper `div` (not the inner measurement layer).
    * */
   parentSizeStyles?: CSSProperties;
   /** Child render function `({ width, height, top, left, ref, resize }) => ReactNode`. */
   children: (args: ParentSizeProvidedProps) => ReactNode;
 } & UseParentSizeConfig;
-
-const defaultParentSizeStyles = { width: '100%', height: '100%' };
 
 export default function ParentSize({
   className,
@@ -28,9 +30,10 @@ export default function ParentSize({
   debounceTime,
   ignoreDimensions,
   initialSize,
-  parentSizeStyles = defaultParentSizeStyles,
+  parentSizeStyles,
   enableDebounceLeadingCall = true,
   resizeObserverPolyfill,
+  style,
   ...restProps
 }: ParentSizeProps & Omit<HTMLAttributes<HTMLDivElement>, keyof ParentSizeProps>) {
   const { parentRef, resize, ...dimensions } = useParentSize({
@@ -41,13 +44,21 @@ export default function ParentSize({
     resizeObserverPolyfill,
   });
 
+  const outerStyle = {
+    ...defaultParentSizeOuterStyles,
+    ...parentSizeStyles,
+    ...style,
+  };
+
   return (
-    <div style={parentSizeStyles} ref={parentRef} className={className} {...restProps}>
-      {children({
-        ...dimensions,
-        ref: parentRef.current,
-        resize,
-      })}
+    <div style={outerStyle} className={className} {...restProps}>
+      <div style={defaultParentSizeMeasureLayerStyles} ref={parentRef}>
+        {children({
+          ...dimensions,
+          ref: parentRef.current,
+          resize,
+        })}
+      </div>
     </div>
   );
 }

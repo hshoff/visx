@@ -1,4 +1,5 @@
 # Changelog
+- [Unreleased](#unreleased)
 - [v3.12.0](#v3120)
 - [v3.11.0](#v3110)
 - [v3.10.4](#v3104)
@@ -181,6 +182,13 @@
 </details>
 
 ------
+
+# Unreleased
+
+#### :boom: Breaking Changes (minor)
+
+- **@visx/responsive**: `ParentSize` and `withParentSize` default wrappers now use an outer `position: relative` container with `overflow: hidden` and `minWidth` / `minHeight: 0`, plus an inner `position: absolute; inset: 0` layer that holds the `ResizeObserver` ref. This stops flex/grid layouts from growing without bound when a child’s intrinsic height feeds back into the measured box. The previous single-wrapper default was `{ width: '100%', height: '100%' }`. To approximate the old behavior on `ParentSize`, pass e.g. `parentSizeStyles={{ width: '100%', height: '100%', overflow: 'visible', minWidth: 'initial', minHeight: 'initial' }}`. See the `@visx/responsive` readme for details. ([#881](https://github.com/airbnb/visx/issues/881), [#1014](https://github.com/airbnb/visx/issues/1014))
+
 # v3.12.0 (2024-11-07)
 
 #### :rocket: Enhancements

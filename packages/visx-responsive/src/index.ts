@@ -1,4 +1,8 @@
 // @visx/responsive
+export {
+  defaultParentSizeMeasureLayerStyles,
+  defaultParentSizeOuterStyles,
+} from './parentSizeWrapperStyles';
 export { default as ParentSize } from './components/ParentSize';
 export { default as ScaleSVG } from './components/ScaleSVG';
 export { default as withParentSize } from './enhancers/withParentSize';

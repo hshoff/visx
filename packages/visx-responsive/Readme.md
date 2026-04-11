@@ -153,6 +153,8 @@ const chartToRender = <ChartWithParentSize myProp="string" initialWidth={400} />
 
 You might do the same thing as `useParentSize` or `withParentSize` using the `ParentSize` component.
 
+By default, the component renders an outer wrapper (`position: relative`, `width` / `height: 100%`, `minWidth` / `minHeight: 0`, `overflow: hidden`) and an inner measurement layer (`position: absolute; inset: 0`) that receives the `ResizeObserver` ref. That keeps measured size independent of the child’s intrinsic dimensions, which avoids runaway height in flex and grid layouts when the child is an SVG. Customize the **outer** wrapper with the `style` prop or the deprecated `parentSizeStyles` prop (both are merged onto the outer element). To restore the previous default of a single full-size box without clipping, pass e.g. `parentSizeStyles={{ width: '100%', height: '100%', overflow: 'visible', minWidth: 'initial', minHeight: 'initial' }}`. The constants `defaultParentSizeOuterStyles` and `defaultParentSizeMeasureLayerStyles` are exported if you need to compose the same pattern elsewhere.
+
 #### Example
 
 ```tsx
