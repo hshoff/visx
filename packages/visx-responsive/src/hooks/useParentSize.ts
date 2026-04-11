@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
-import type { RefObject } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import type { RefCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DebounceSettings, PrivateWindow, ResizeObserverPolyfill } from '../types';
 
 export type ParentSizeState = {
@@ -20,7 +20,7 @@ export type UseParentSizeConfig = {
 } & DebounceSettings;
 
 type UseParentSizeResult<T extends HTMLElement = HTMLDivElement> = ParentSizeState & {
-  parentRef: RefObject<T | null>;
+  parentRef: RefCallback<T | null>;
   resize: (state: ParentSizeState) => void;
 };
 
@@ -39,8 +39,8 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
   enableDebounceLeadingCall = true,
   resizeObserverPolyfill,
 }: UseParentSizeConfig = {}): UseParentSizeResult<T> {
-  const parentRef = useRef<T>(null);
   const animationFrameID = useRef(0);
+  const observerRef = useRef<ResizeObserver | null>(null);
 
   const [state, setState] = useState<ParentSizeState>({ ...defaultInitialSize, ...initialSize });
 
@@ -62,26 +62,32 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
     );
   }, [debounceTime, enableDebounceLeadingCall, ignoreDimensions]);
 
-  useEffect(() => {
-    const LocalResizeObserver =
-      resizeObserverPolyfill || (window as unknown as PrivateWindow).ResizeObserver;
+  const parentRef = useCallback(
+    (element: T | null) => {
+      window.cancelAnimationFrame(animationFrameID.current);
+      observerRef.current?.disconnect();
+      observerRef.current = null;
 
-    const observer = new LocalResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { left, top, width, height } = entry?.contentRect ?? {};
-        animationFrameID.current = window.requestAnimationFrame(() => {
-          resize({ width, height, top, left });
+      if (!element) return;
+
+      const LocalResizeObserver =
+        resizeObserverPolyfill || (window as unknown as PrivateWindow).ResizeObserver;
+
+      const observer = new LocalResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          const { left, top, width, height } = entry?.contentRect ?? {};
+          animationFrameID.current = window.requestAnimationFrame(() => {
+            resize({ width, height, top, left });
+          });
         });
       });
-    });
-    if (parentRef.current) observer.observe(parentRef.current);
+      observer.observe(element);
+      observerRef.current = observer;
+    },
+    [resize, resizeObserverPolyfill],
+  );
 
-    return () => {
-      window.cancelAnimationFrame(animationFrameID.current);
-      observer.disconnect();
-      resize.cancel();
-    };
-  }, [resize, resizeObserverPolyfill]);
+  useEffect(() => () => resize.cancel(), [resize]);
 
   return { parentRef, resize, ...state };
 }

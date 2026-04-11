@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode, HTMLAttributes } from 'react';
+import { useCallback, useState } from 'react';
 import type { ParentSizeState, UseParentSizeConfig } from '../hooks/useParentSize';
 import useParentSize from '../hooks/useParentSize';
 
@@ -41,11 +42,20 @@ export default function ParentSize({
     resizeObserverPolyfill,
   });
 
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
+  const setRefs = useCallback(
+    (node: HTMLDivElement | null) => {
+      setElement(node);
+      parentRef(node);
+    },
+    [parentRef],
+  );
+
   return (
-    <div style={parentSizeStyles} ref={parentRef} className={className} {...restProps}>
+    <div style={parentSizeStyles} ref={setRefs} className={className} {...restProps}>
       {children({
         ...dimensions,
-        ref: parentRef.current,
+        ref: element,
         resize,
       })}
     </div>
