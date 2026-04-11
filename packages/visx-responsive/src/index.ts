@@ -1,3 +1,5 @@
+'use client';
+
 // @visx/responsive
 export { default as ParentSize } from './components/ParentSize';
 export { default as ScaleSVG } from './components/ScaleSVG';

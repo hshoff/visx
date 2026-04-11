@@ -63,6 +63,8 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
   }, [debounceTime, enableDebounceLeadingCall, ignoreDimensions]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const LocalResizeObserver =
       resizeObserverPolyfill || (window as unknown as PrivateWindow).ResizeObserver;
 
