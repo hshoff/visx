@@ -25,6 +25,10 @@ const presets = [
 
 const plugins = [];
 
+if (process.env.ESM === 'true') {
+  plugins.push(['babel-plugin-add-import-extension', { extension: 'js' }]);
+}
+
 const ignore = [
   'coverage/',
   'public/',
