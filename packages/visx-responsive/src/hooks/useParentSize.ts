@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
 import type { RefObject } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DebounceSettings, PrivateWindow, ResizeObserverPolyfill } from '../types';
 
 export type ParentSizeState = {
@@ -19,9 +19,11 @@ export type UseParentSizeConfig = {
   ignoreDimensions?: keyof ParentSizeState | (keyof ParentSizeState)[];
 } & DebounceSettings;
 
+type ResizeHandler = ((state: ParentSizeState) => void) & { cancel: () => void };
+
 type UseParentSizeResult<T extends HTMLElement = HTMLDivElement> = ParentSizeState & {
   parentRef: RefObject<T | null>;
-  resize: (state: ParentSizeState) => void;
+  resize: ResizeHandler;
 };
 
 const defaultIgnoreDimensions: UseParentSizeConfig['ignoreDimensions'] = [];
@@ -44,23 +46,32 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
 
   const [state, setState] = useState<ParentSizeState>({ ...defaultInitialSize, ...initialSize });
 
-  const resize = useMemo(() => {
-    const normalized = Array.isArray(ignoreDimensions) ? ignoreDimensions : [ignoreDimensions];
+  const applyIncoming = useCallback(
+    (incoming: ParentSizeState) => {
+      const normalized = Array.isArray(ignoreDimensions) ? ignoreDimensions : [ignoreDimensions];
+      setState((existing) => {
+        const stateKeys = Object.keys(existing) as (keyof ParentSizeState)[];
+        const keysWithChanges = stateKeys.filter((key) => existing[key] !== incoming[key]);
+        const shouldBail = keysWithChanges.every((key) => normalized.includes(key));
 
-    return debounce(
-      (incoming: ParentSizeState) => {
-        setState((existing) => {
-          const stateKeys = Object.keys(existing) as (keyof ParentSizeState)[];
-          const keysWithChanges = stateKeys.filter((key) => existing[key] !== incoming[key]);
-          const shouldBail = keysWithChanges.every((key) => normalized.includes(key));
+        return shouldBail ? existing : incoming;
+      });
+    },
+    [ignoreDimensions],
+  );
 
-          return shouldBail ? existing : incoming;
-        });
-      },
-      debounceTime,
-      { leading: enableDebounceLeadingCall },
-    );
-  }, [debounceTime, enableDebounceLeadingCall, ignoreDimensions]);
+  const resize = useMemo((): ResizeHandler => {
+    if (debounceTime === 0) {
+      const immediate: ResizeHandler = (incoming: ParentSizeState) => {
+        applyIncoming(incoming);
+      };
+      immediate.cancel = () => {};
+      return immediate;
+    }
+    return debounce(applyIncoming, debounceTime, {
+      leading: enableDebounceLeadingCall,
+    }) as ResizeHandler;
+  }, [applyIncoming, debounceTime, enableDebounceLeadingCall]);
 
   useEffect(() => {
     const LocalResizeObserver =
@@ -69,9 +80,14 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
     const observer = new LocalResizeObserver((entries) => {
       entries.forEach((entry) => {
         const { left, top, width, height } = entry?.contentRect ?? {};
-        animationFrameID.current = window.requestAnimationFrame(() => {
-          resize({ width, height, top, left });
-        });
+        const next = { width, height, top, left };
+        if (debounceTime === 0) {
+          animationFrameID.current = window.requestAnimationFrame(() => {
+            applyIncoming(next);
+          });
+        } else {
+          resize(next);
+        }
       });
     });
     if (parentRef.current) observer.observe(parentRef.current);
@@ -81,7 +97,7 @@ export default function useParentSize<T extends HTMLElement = HTMLDivElement>({
       observer.disconnect();
       resize.cancel();
     };
-  }, [resize, resizeObserverPolyfill]);
+  }, [applyIncoming, debounceTime, resize, resizeObserverPolyfill]);
 
   return { parentRef, resize, ...state };
 }

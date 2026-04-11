@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import type { DebouncedFunc } from 'lodash';
 import { Component } from 'react';
 import type { ComponentType } from 'react';
 import type {
@@ -52,46 +53,68 @@ export default function withParentSize<P extends WithParentSizeProvidedProps>(
     animationFrameID: number = 0;
     resizeObserver: ResizeObserver | undefined;
     container: HTMLDivElement | null = null;
+    resizeDebounced: DebouncedFunc<(dims: { width: number; height: number }) => void> | undefined;
+
+    applyParentSize = ({ width, height }: { width: number; height: number }) => {
+      this.setState({
+        parentWidth: width,
+        parentHeight: height,
+      });
+    };
+
+    syncDebouncedResize() {
+      this.resizeDebounced?.cancel();
+      const debounceTime = this.props.debounceTime ?? 300;
+      if (debounceTime > 0) {
+        this.resizeDebounced = debounce(this.applyParentSize, debounceTime, {
+          leading: this.props.enableDebounceLeadingCall ?? true,
+        });
+      } else {
+        this.resizeDebounced = undefined;
+      }
+    }
 
     componentDidMount() {
+      this.syncDebouncedResize();
+
       const ResizeObserverLocal =
         resizeObserverPolyfill || (window as unknown as PrivateWindow).ResizeObserver;
 
       this.resizeObserver = new ResizeObserverLocal((entries) => {
         entries.forEach((entry) => {
           const { width, height } = entry.contentRect;
-          this.animationFrameID = window.requestAnimationFrame(() => {
-            this.resize({
-              width,
-              height,
+          const dims = { width, height };
+          const debounceTime = this.props.debounceTime ?? 300;
+          if (debounceTime === 0) {
+            this.animationFrameID = window.requestAnimationFrame(() => {
+              this.applyParentSize(dims);
             });
-          });
+          } else {
+            this.resizeDebounced?.(dims);
+          }
         });
       });
       if (this.container) this.resizeObserver.observe(this.container);
     }
 
+    componentDidUpdate(prevProps: WithParentSizeComponentProps<P>) {
+      if (
+        prevProps.debounceTime !== this.props.debounceTime ||
+        prevProps.enableDebounceLeadingCall !== this.props.enableDebounceLeadingCall
+      ) {
+        this.syncDebouncedResize();
+      }
+    }
+
     componentWillUnmount() {
       window.cancelAnimationFrame(this.animationFrameID);
       if (this.resizeObserver) this.resizeObserver.disconnect();
-      this.resize.cancel();
+      this.resizeDebounced?.cancel();
     }
 
     setRef = (ref: HTMLDivElement) => {
       this.container = ref;
     };
-
-    resize = debounce(
-      // eslint-disable-next-line unicorn/consistent-function-scoping
-      ({ width, height }: { width: number; height: number }) => {
-        this.setState({
-          parentWidth: width,
-          parentHeight: height,
-        });
-      },
-      this.props.debounceTime ?? 300,
-      { leading: this.props.enableDebounceLeadingCall ?? true },
-    );
 
     render() {
       const { initialWidth, initialHeight } = this.props;
