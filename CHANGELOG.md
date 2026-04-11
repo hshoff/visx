@@ -1,4 +1,11 @@
 # Changelog
+
+## Unreleased
+
+#### :house: Internal
+
+- **Breaking (TypeScript):** `@types/react` is now a `peerDependency` (not a regular dependency) on React-based `@visx/*` packages, and `@visx/bounds` also lists `@types/react-dom` as a peer. Install the versions that match your React setup (or rely on React 19’s built-in types). `@visx/visx` now declares `@types/react` as a peer so the umbrella package surfaces the same expectation.
+
 - [v3.12.0](#v3120)
 - [v3.11.0](#v3110)
 - [v3.10.4](#v3104)

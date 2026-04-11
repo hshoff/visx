@@ -46,14 +46,17 @@
   },
   "peerDependencies": {
     "@react-spring/web": "^9.7.5 || ^10.0.0",
+    "@types/react": "*",
     "react": "^16.14.0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0"
   },
   "dependencies": {
-    "@types/react": "*",
     "@visx/axis": "workspace:*",
     "@visx/grid": "workspace:*",
     "@visx/scale": "workspace:*",
     "@visx/text": "workspace:*",
     "classnames": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0"
   }
 }

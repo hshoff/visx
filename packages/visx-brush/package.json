@@ -46,5 +46,8 @@
       "import": "./esm/index.js",
       "require": "./lib/index.js"
     }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0"
   }
 }
