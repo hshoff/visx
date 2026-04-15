@@ -1,19 +1,35 @@
 import React from 'react';
-import Polygons from '../sandboxes/visx-polygons/Example';
-import packageJson from '../sandboxes/visx-polygons/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Polygons from '../examples/visx-polygons/example';
+import packageJson from '../examples/visx-polygons/package.json';
 import Show from '../components/Show';
-import PolygonsSource from '!!raw-loader!../sandboxes/visx-polygons/Example';
 
-function PolygonsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-polygons');
+
+type PolygonsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<PolygonsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function PolygonsPage({ exampleSource, highlightedCodeHtml }: PolygonsPageProps) {
   return (
     <Show
       component={Polygons}
       title="Polygons"
-      codeSandboxDirectoryName="visx-polygons"
       packageJson={packageJson}
-    >
-      {PolygonsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default PolygonsPage;

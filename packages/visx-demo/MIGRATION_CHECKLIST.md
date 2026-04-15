@@ -1,8 +1,8 @@
 # visx-demo CodeSandbox migration checklist
 
-**Step 1 — inventory** (this file). Tracks every sandbox under `src/sandboxes/` for the CodeSandbox → inline example migration.
+**Step 1 — inventory** (this file). Original sandboxes now live under `src/examples/` as `example.tsx` + helpers.
 
-**Convention:** `template/` is CodeSandbox boilerplate only (not a gallery example). **47** `visx-*` directories contain an `Example.tsx` used by the demo site (48 entries under `sandboxes/` including `template/`).
+**Convention:** Examples live in `src/examples/visx-*/` (47 chart demos). The old `template/` sandbox folder was removed with `src/sandboxes/`.
 
 ## Inventory summary
 
@@ -14,7 +14,7 @@
 
 **Redundant pairs** are candidates to merge in Step 3 (same chart type, vertical vs horizontal). Final call during migration.
 
-**Dependency lookup gap:** `exampleToVisxDependencyLookup.ts` imports package.json for most sandboxes but **does not** include `visx-geo-albers-usa`, `visx-xychart`, or `visx-tooltip` (those examples exist on disk and in pages). Fix when touching that module in Step 4.
+**Dependency lookup:** `src/utils/exampleToVisxDependencyLookup.ts` imports each example’s `package.json` (including geo-albers-usa, xychart, tooltip).
 
 ---
 
@@ -22,8 +22,7 @@
 
 | Sandbox name | Category | Future recipe | Notes |
 |--------------|----------|---------------|-------|
-| `template` | — | — | Sandbox template; not an example. Safe to remove with `sandboxes/` cleanup. |
-| `visx-annotation` | standalone | — | `ExampleControls.tsx`, `findNearestDatum.ts` alongside `Example.tsx`. |
+| `visx-annotation` | standalone | — | `ExampleControls.tsx`, `findNearestDatum.ts` alongside `example.tsx`. |
 | `visx-area` | recipe-mapped | `area-chart` | Tooltip + `@visx/mock-data` stock series. |
 | `visx-axis` | standalone | — | Axis primitives demo. |
 | `visx-bargroup` | recipe-mapped | `grouped-bar-chart` | Vertical grouped bars (`@visx/mock-data` cities). |
@@ -82,19 +81,19 @@ Use this section to tick off work after Step 1.
 - [x] Add `src/components/ExampleViewer/` — `ExampleViewerClient.tsx` (`'use client'`), `highlightExampleCode.ts` (Shiki + rehype-pretty-code), `index.tsx`
 - [x] Dependencies: `shiki`, `rehype-pretty-code`, `unified`, `remark-parse`, `remark-rehype`, `rehype-stringify`
 - [x] `Show` accepts optional `exampleSource` + `highlightedCodeHtml` (inline viewer + legacy Codeblock path)
-- [x] Reference wiring: `pages/areas.tsx` uses `getStaticProps` + `fs.readFileSync` for `visx-area/Example.tsx` (other pages: same pattern in Step 3)
+- [x] Gallery pages use `getStaticProps` + `loadExampleSourceBundle` + `highlightExampleCode` (see any `pages/*.tsx` gallery route)
 
 ### Step 3 — Migrate examples
 
 For each row in **Full inventory** with a `visx-*` name:
 
-- [ ] `visx-annotation` through `visx-zoom-i` (47 sandboxes) — copy `Example.tsx` → `src/examples/<name>/example.tsx`, update page, remove CodeSandbox embed
+- [x] `visx-annotation` through `visx-zoom-i` — examples in `src/examples/<name>/example.tsx`, gallery pages updated, `home` + `Gallery/*` imports point at `examples/`
 
 ### Step 4 — Remove sandboxes
 
-- [ ] Delete `src/sandboxes/`
-- [ ] Remove CodeSandbox URL helpers and deps
-- [ ] Fix `exampleToVisxDependencyLookup.ts` (or replace) for new layout
+- [x] Delete `src/sandboxes/` (done in Step 3 with this branch)
+- [x] Remove CodeSandbox link component / `codeSandboxDirectoryName` props
+- [x] `exampleToVisxDependencyLookup` → `src/utils/exampleToVisxDependencyLookup.ts`
 
 ### Step 5 — Verify
 

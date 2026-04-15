@@ -1,9 +1,9 @@
 import React from 'react';
-import type { StackedAreasProps } from '../../sandboxes/visx-stacked-areas/Example';
-import StackedAreas, { background } from '../../sandboxes/visx-stacked-areas/Example';
+import type { StackedAreasProps } from '../../examples/visx-stacked-areas/example';
+import StackedAreas, { background } from '../../examples/visx-stacked-areas/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-stacked-areas/package.json';
+export { default as packageJson } from '../../examples/visx-stacked-areas/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: 'rgba(251, 224, 137, 1.000)' };

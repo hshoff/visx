@@ -1,19 +1,35 @@
 import React from 'react';
-import Tooltip from '../sandboxes/visx-tooltip/Example';
-import packageJson from '../sandboxes/visx-tooltip/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Tooltip from '../examples/visx-tooltip/example';
+import packageJson from '../examples/visx-tooltip/package.json';
 import Show from '../components/Show';
-import TooltipSource from '!!raw-loader!../sandboxes/visx-tooltip/Example';
 
-function TooltipPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-tooltip');
+
+type TooltipPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<TooltipPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function TooltipPage({ exampleSource, highlightedCodeHtml }: TooltipPageProps) {
   return (
     <Show
       component={Tooltip}
       title="Tooltip"
-      codeSandboxDirectoryName="visx-tooltip"
       packageJson={packageJson}
-    >
-      {TooltipSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default TooltipPage;

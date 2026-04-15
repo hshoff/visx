@@ -1,19 +1,35 @@
 import React from 'react';
-import LineRadial from '../sandboxes/visx-shape-line-radial/Example';
-import packageJson from '../sandboxes/visx-shape-line-radial/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import LineRadial from '../examples/visx-shape-line-radial/example';
+import packageJson from '../examples/visx-shape-line-radial/package.json';
 import Show from '../components/Show';
-import LineRadialSource from '!!raw-loader!../sandboxes/visx-shape-line-radial/Example';
 
-function LineRadialPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-shape-line-radial');
+
+type LineradialPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<LineradialPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function LineRadialPage({ exampleSource, highlightedCodeHtml }: LineradialPageProps) {
   return (
     <Show
       component={LineRadial}
       title="Line Radial"
-      codeSandboxDirectoryName="visx-shape-line-radial"
       packageJson={packageJson}
-    >
-      {LineRadialSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default LineRadialPage;

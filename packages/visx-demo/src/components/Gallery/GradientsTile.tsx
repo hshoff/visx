@@ -1,9 +1,9 @@
 import React from 'react';
-import type { GradientProps } from '../../sandboxes/visx-gradient/Example';
-import Gradient from '../../sandboxes/visx-gradient/Example';
+import type { GradientProps } from '../../examples/visx-gradient/example';
+import Gradient from '../../examples/visx-gradient/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-gradient/package.json';
+export { default as packageJson } from '../../examples/visx-gradient/package.json';
 
 const tileStyles = { background: 'white', boxShadow: '0 1px 6px rgba(0,0,0,0.1)' };
 const detailsStyles = { color: '#333' };

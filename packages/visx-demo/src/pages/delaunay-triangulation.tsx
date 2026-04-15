@@ -1,10 +1,27 @@
 import React from 'react';
-import DelaunayTriangulation from '../sandboxes/visx-delaunay-triangulation/Example';
-import packageJson from '../sandboxes/visx-delaunay-triangulation/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import DelaunayTriangulation from '../examples/visx-delaunay-triangulation/example';
+import packageJson from '../examples/visx-delaunay-triangulation/package.json';
 import Show from '../components/Show';
-import DelaunayTriangulationSource from '!!raw-loader!../sandboxes/visx-delaunay-triangulation/Example';
 
-function DelaunayTriangulationPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-delaunay-triangulation');
+
+type DelaunayTriangulationPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<DelaunayTriangulationPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function DelaunayTriangulationPage({ exampleSource, highlightedCodeHtml }: DelaunayTriangulationPageProps) {
   return (
     <Show
       events
@@ -16,11 +33,10 @@ function DelaunayTriangulationPage() {
       }}
       component={DelaunayTriangulation}
       title="Delaunay Triangulation"
-      codeSandboxDirectoryName="visx-delaunay-triangulation"
       packageJson={packageJson}
-    >
-      {DelaunayTriangulationSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default DelaunayTriangulationPage;

@@ -1,10 +1,27 @@
 import React from 'react';
-import BarStackHorizontal from '../sandboxes/visx-barstack-horizontal/Example';
-import packageJson from '../sandboxes/visx-barstack-horizontal/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import BarStackHorizontal from '../examples/visx-barstack-horizontal/example';
+import packageJson from '../examples/visx-barstack-horizontal/package.json';
 import Show from '../components/Show';
-import BarStackHorizontalSource from '!!raw-loader!../sandboxes/visx-barstack-horizontal/Example';
 
-function BarStackHorizontalPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-barstack-horizontal');
+
+type BarstackhorizontalPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<BarstackhorizontalPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function BarStackHorizontalPage({ exampleSource, highlightedCodeHtml }: BarstackhorizontalPageProps) {
   return (
     <Show
       events
@@ -16,11 +33,10 @@ function BarStackHorizontalPage() {
       }}
       component={BarStackHorizontal}
       title="Bar Stack Horizontal"
-      codeSandboxDirectoryName="visx-barstack-horizontal"
       packageJson={packageJson}
-    >
-      {BarStackHorizontalSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default BarStackHorizontalPage;

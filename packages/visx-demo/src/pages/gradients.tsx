@@ -1,20 +1,36 @@
 import React from 'react';
-import Gradients from '../sandboxes/visx-gradient/Example';
-import packageJson from '../sandboxes/visx-gradient/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Gradients from '../examples/visx-gradient/example';
+import packageJson from '../examples/visx-gradient/package.json';
 import Show from '../components/Show';
-import GradientsSource from '!!raw-loader!../sandboxes/visx-gradient/Example';
 
-function GradientsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-gradient');
+
+type GradientsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<GradientsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function GradientsPage({ exampleSource, highlightedCodeHtml }: GradientsPageProps) {
   return (
     <Show
       shadow
       component={Gradients}
       title="Gradients"
-      codeSandboxDirectoryName="visx-gradient"
       packageJson={packageJson}
-    >
-      {GradientsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default GradientsPage;

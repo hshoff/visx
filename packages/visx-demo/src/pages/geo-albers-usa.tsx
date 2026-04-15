@@ -1,20 +1,36 @@
 import React from 'react';
-import GeoAlbersUsa from '../sandboxes/visx-geo-albers-usa/Example';
-import packageJson from '../sandboxes/visx-geo-albers-usa/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import GeoAlbersUsa from '../examples/visx-geo-albers-usa/example';
+import packageJson from '../examples/visx-geo-albers-usa/package.json';
 import Show from '../components/Show';
-import GeoAlbersUsaSource from '!!raw-loader!../sandboxes/visx-geo-albers-usa/Example';
 
-function GeoAlbersUsaPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-geo-albers-usa');
+
+type GeoAlbersUsaPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<GeoAlbersUsaPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function GeoAlbersUsaPage({ exampleSource, highlightedCodeHtml }: GeoAlbersUsaPageProps) {
   return (
     <Show
       events
       component={GeoAlbersUsa}
       title="Geo AlbersUsa"
-      codeSandboxDirectoryName="visx-geo-albers-usa"
       packageJson={packageJson}
-    >
-      {GeoAlbersUsaSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default GeoAlbersUsaPage;

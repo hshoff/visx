@@ -1,20 +1,36 @@
 import React from 'react';
-import Trees from '../sandboxes/visx-tree/Example';
-import packageJson from '../sandboxes/visx-tree/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Trees from '../examples/visx-tree/example';
+import packageJson from '../examples/visx-tree/package.json';
 import Show from '../components/Show';
-import TreesSource from '!!raw-loader!../sandboxes/visx-tree/Example';
 
-function TreesPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-tree');
+
+type TreesPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<TreesPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function TreesPage({ exampleSource, highlightedCodeHtml }: TreesPageProps) {
   return (
     <Show
       events
       title="Trees"
       component={Trees}
-      codeSandboxDirectoryName="visx-tree"
       packageJson={packageJson}
-    >
-      {TreesSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default TreesPage;

@@ -1,20 +1,36 @@
 import React from 'react';
-import RadialBars from '../sandboxes/visx-radial-bars/Example';
-import packageJson from '../sandboxes/visx-radial-bars/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import RadialBars from '../examples/visx-radial-bars/example';
+import packageJson from '../examples/visx-radial-bars/package.json';
 import Show from '../components/Show';
-import RadialBarsSource from '!!raw-loader!../sandboxes/visx-radial-bars/Example';
 
-function BarsRadialPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-radial-bars');
+
+type RadialBarsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<RadialBarsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function BarsRadialPage({ exampleSource, highlightedCodeHtml }: RadialBarsPageProps) {
   return (
     <Show
       events
       component={RadialBars}
       title="Radial Bars"
-      codeSandboxDirectoryName="visx-radial-bars"
       packageJson={packageJson}
-    >
-      {RadialBarsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default BarsRadialPage;

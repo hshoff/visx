@@ -1,9 +1,9 @@
 import React from 'react';
-import type { RadarProps } from '../../sandboxes/visx-radar/Example';
-import Radar, { background, pumpkin } from '../../sandboxes/visx-radar/Example';
+import type { RadarProps } from '../../examples/visx-radar/example';
+import Radar, { background, pumpkin } from '../../examples/visx-radar/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-radar/package.json';
+export { default as packageJson } from '../../examples/visx-radar/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: pumpkin };

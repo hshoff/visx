@@ -1,9 +1,9 @@
 import React from 'react';
-import type { BarsProps } from '../../sandboxes/visx-bars/Example';
-import Bars from '../../sandboxes/visx-bars/Example';
+import type { BarsProps } from '../../examples/visx-bars/example';
+import Bars from '../../examples/visx-bars/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-bars/package.json';
+export { default as packageJson } from '../../examples/visx-bars/package.json';
 
 const tileStyles = { background: '#5290e7' };
 const detailsStyles = { color: 'rgba(25, 231, 217, 1)' };

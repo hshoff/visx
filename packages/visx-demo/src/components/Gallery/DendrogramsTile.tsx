@@ -1,9 +1,9 @@
 import React from 'react';
-import type { DendrogramProps } from '../../sandboxes/visx-dendrogram/Example';
-import Dendrogram, { background, green } from '../../sandboxes/visx-dendrogram/Example';
+import type { DendrogramProps } from '../../examples/visx-dendrogram/example';
+import Dendrogram, { background, green } from '../../examples/visx-dendrogram/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-dendrogram/package.json';
+export { default as packageJson } from '../../examples/visx-dendrogram/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: green };

@@ -1,9 +1,9 @@
 import React from 'react';
-import type { GeoAlbersUsaProps } from '../../sandboxes/visx-geo-albers-usa/Example';
-import GeoAlbersUsa, { background, colors } from '../../sandboxes/visx-geo-albers-usa/Example';
+import type { GeoAlbersUsaProps } from '../../examples/visx-geo-albers-usa/example';
+import GeoAlbersUsa, { background, colors } from '../../examples/visx-geo-albers-usa/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-geo-albers-usa/package.json';
+export { default as packageJson } from '../../examples/visx-geo-albers-usa/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: colors[1] };

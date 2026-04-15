@@ -1,20 +1,36 @@
 import React from 'react';
-import SplitLinePathExample from '../sandboxes/visx-shape-splitlinepath/Example';
-import packageJson from '../sandboxes/visx-shape-splitlinepath/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import SplitLinePathExample from '../examples/visx-shape-splitlinepath/example';
+import packageJson from '../examples/visx-shape-splitlinepath/package.json';
 import Show from '../components/Show';
-import StatsPlotSource from '!!raw-loader!../sandboxes/visx-shape-splitlinepath/Example';
 
-function SplitLinePathPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-shape-splitlinepath');
+
+type SplitlinepathPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<SplitlinepathPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function SplitLinePathPage({ exampleSource, highlightedCodeHtml }: SplitlinepathPageProps) {
   return (
     <Show
       events
       component={SplitLinePathExample}
       title="SplitLinePath"
-      codeSandboxDirectoryName="visx-shape-splitlinepath"
       packageJson={packageJson}
-    >
-      {StatsPlotSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default SplitLinePathPage;

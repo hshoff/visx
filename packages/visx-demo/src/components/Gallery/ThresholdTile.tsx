@@ -1,9 +1,9 @@
 import React from 'react';
-import type { ThresholdProps } from '../../sandboxes/visx-threshold/Example';
-import Threshold, { background } from '../../sandboxes/visx-threshold/Example';
+import type { ThresholdProps } from '../../examples/visx-threshold/example';
+import Threshold, { background } from '../../examples/visx-threshold/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-threshold/package.json';
+export { default as packageJson } from '../../examples/visx-threshold/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: '#111' };

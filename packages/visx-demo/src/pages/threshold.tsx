@@ -1,8 +1,25 @@
 import React from 'react';
-import Threshold from '../sandboxes/visx-threshold/Example';
-import packageJson from '../sandboxes/visx-threshold/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Threshold from '../examples/visx-threshold/example';
+import packageJson from '../examples/visx-threshold/package.json';
 import Show from '../components/Show';
-import ThresholdSource from '!!raw-loader!../sandboxes/visx-threshold/Example';
+
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-threshold');
+
+type ThresholdPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<ThresholdPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
 
 function Description({ width }: { width: number }) {
   return (
@@ -17,17 +34,16 @@ function Description({ width }: { width: number }) {
   );
 }
 
-function ThresholdPage() {
+function ThresholdPage({ exampleSource, highlightedCodeHtml }: ThresholdPageProps) {
   return (
     <Show
       component={Threshold}
       title="Threshold"
       description={Description}
-      codeSandboxDirectoryName="visx-threshold"
       packageJson={packageJson}
-    >
-      {ThresholdSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default ThresholdPage;

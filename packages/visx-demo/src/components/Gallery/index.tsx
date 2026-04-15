@@ -52,7 +52,7 @@ import * as ZoomITile from './ZoomITile';
 import type { VisxPackage } from '../../types';
 import exampleToVisxDependencyLookup, {
   visxPackages,
-} from '../../sandboxes/exampleToVisxDependencyLookup';
+} from '../../utils/exampleToVisxDependencyLookup';
 
 export const tiles = [
   BarsTile,

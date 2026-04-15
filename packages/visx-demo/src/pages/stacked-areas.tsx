@@ -1,15 +1,31 @@
 import React from 'react';
-import StackedAreas from '../sandboxes/visx-stacked-areas/Example';
-import packageJson from '../sandboxes/visx-stacked-areas/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import StackedAreas from '../examples/visx-stacked-areas/example';
+import packageJson from '../examples/visx-stacked-areas/package.json';
 import Show from '../components/Show';
-import StackedAreasSource from '!!raw-loader!../sandboxes/visx-stacked-areas/Example';
 
-function StackedAreasPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-stacked-areas');
+
+type StackedAreasPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<StackedAreasPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function StackedAreasPage({ exampleSource, highlightedCodeHtml }: StackedAreasPageProps) {
   return (
     <Show
       component={StackedAreas}
       title="Stacked Areas"
-      codeSandboxDirectoryName="visx-stacked-areas"
       margin={{
         top: 0,
         left: 0,
@@ -17,9 +33,9 @@ function StackedAreasPage() {
         bottom: 10,
       }}
       packageJson={packageJson}
-    >
-      {StackedAreasSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default StackedAreasPage;

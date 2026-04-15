@@ -1,19 +1,35 @@
 import React from 'react';
-import Annotation from '../sandboxes/visx-annotation/Example';
-import packageJson from '../sandboxes/visx-annotation/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Annotation from '../examples/visx-annotation/example';
+import packageJson from '../examples/visx-annotation/package.json';
 import Show from '../components/Show';
-import AnnotationSource from '!!raw-loader!../sandboxes/visx-annotation/Example';
 
-function AnnotationPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-annotation');
+
+type AnnotationPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<AnnotationPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function AnnotationPage({ exampleSource, highlightedCodeHtml }: AnnotationPageProps) {
   return (
     <Show
       component={Annotation}
       title="Annotation"
-      codeSandboxDirectoryName="visx-annotation"
       packageJson={packageJson}
-    >
-      {AnnotationSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 

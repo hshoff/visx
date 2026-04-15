@@ -1,9 +1,9 @@
 import React from 'react';
-import type { ChordProps } from '../../sandboxes/visx-chord/Example';
-import Chord from '../../sandboxes/visx-chord/Example';
+import type { ChordProps } from '../../examples/visx-chord/example';
+import Chord from '../../examples/visx-chord/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-chord/package.json';
+export { default as packageJson } from '../../examples/visx-chord/package.json';
 
 const tileStyles = { background: '#e4e3d8' };
 const detailsStyles = { color: '#111' };

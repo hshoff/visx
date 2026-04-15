@@ -1,19 +1,35 @@
 import React from 'react';
-import Network from '../sandboxes/visx-network/Example';
-import packageJson from '../sandboxes/visx-network/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Network from '../examples/visx-network/example';
+import packageJson from '../examples/visx-network/package.json';
 import Show from '../components/Show';
-import NetworkSource from '!!raw-loader!../sandboxes/visx-network/Example';
 
-function NetworkPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-network');
+
+type NetworkPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<NetworkPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function NetworkPage({ exampleSource, highlightedCodeHtml }: NetworkPageProps) {
   return (
     <Show
       component={Network}
       title="Network"
-      codeSandboxDirectoryName="visx-network"
       packageJson={packageJson}
-    >
-      {NetworkSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default NetworkPage;

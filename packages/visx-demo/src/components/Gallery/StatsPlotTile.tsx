@@ -1,9 +1,9 @@
 import React from 'react';
-import type { StatsPlotProps } from '../../sandboxes/visx-stats/Example';
-import StatsPlot from '../../sandboxes/visx-stats/Example';
+import type { StatsPlotProps } from '../../examples/visx-stats/example';
+import StatsPlot from '../../examples/visx-stats/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-stats/package.json';
+export { default as packageJson } from '../../examples/visx-stats/package.json';
 
 const tileStyles = { background: '#8a88e3' };
 const detailsStyles = { color: '#ffffff', zIndex: 1 };

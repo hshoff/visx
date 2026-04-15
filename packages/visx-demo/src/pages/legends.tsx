@@ -1,20 +1,36 @@
 import React from 'react';
-import Legends from '../sandboxes/visx-legend/Example';
-import packageJson from '../sandboxes/visx-legend/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Legends from '../examples/visx-legend/example';
+import packageJson from '../examples/visx-legend/package.json';
 import Show from '../components/Show';
-import LegendsSource from '!!raw-loader!../sandboxes/visx-legend/Example';
 
-function LegendsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-legend');
+
+type LegendsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<LegendsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function LegendsPage({ exampleSource, highlightedCodeHtml }: LegendsPageProps) {
   return (
     <Show
       events
       component={Legends}
       title="Legends"
-      codeSandboxDirectoryName="visx-legend"
       packageJson={packageJson}
-    >
-      {LegendsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default LegendsPage;

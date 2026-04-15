@@ -1,9 +1,9 @@
 import React from 'react';
-import type { BarStackProps } from '../../sandboxes/visx-barstack/Example';
-import BarStack, { background, purple3 } from '../../sandboxes/visx-barstack/Example';
+import type { BarStackProps } from '../../examples/visx-barstack/example';
+import BarStack, { background, purple3 } from '../../examples/visx-barstack/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-barstack/package.json';
+export { default as packageJson } from '../../examples/visx-barstack/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: purple3, zIndex: 1 };

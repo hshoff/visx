@@ -1,9 +1,9 @@
 import React from 'react';
-import type { GeoMercatorProps } from '../../sandboxes/visx-geo-mercator/Example';
-import GeoMercator, { background } from '../../sandboxes/visx-geo-mercator/Example';
+import type { GeoMercatorProps } from '../../examples/visx-geo-mercator/example';
+import GeoMercator, { background } from '../../examples/visx-geo-mercator/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-geo-mercator/package.json';
+export { default as packageJson } from '../../examples/visx-geo-mercator/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: '#f63a48' };

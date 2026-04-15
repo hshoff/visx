@@ -2,10 +2,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { ParentSize } from '@visx/responsive';
-import Dots from '../sandboxes/visx-dots/Example';
-import Zoom from '../sandboxes/visx-zoom-i/Example';
-import Radial from '../sandboxes/visx-shape-line-radial/Example';
-import Bars from '../sandboxes/visx-bars/Example';
+import Dots from '../examples/visx-dots/example';
+import Zoom from '../examples/visx-zoom-i/example';
+import Radial from '../examples/visx-shape-line-radial/example';
+import Bars from '../examples/visx-bars/example';
 import Footer from '../components/Footer';
 import Page from '../components/Page';
 

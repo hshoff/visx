@@ -1,10 +1,27 @@
 import React from 'react';
-import Brush from '../sandboxes/visx-brush/Example';
-import packageJson from '../sandboxes/visx-brush/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Brush from '../examples/visx-brush/example';
+import packageJson from '../examples/visx-brush/package.json';
 import Show from '../components/Show';
-import BrushSource from '!!raw-loader!../sandboxes/visx-brush/Example';
 
-function BrushPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-brush');
+
+type BrushPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<BrushPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function BrushPage({ exampleSource, highlightedCodeHtml }: BrushPageProps) {
   return (
     <Show
       component={Brush}
@@ -15,11 +32,10 @@ function BrushPage() {
         right: 20,
         bottom: 10,
       }}
-      codeSandboxDirectoryName="visx-brush"
       packageJson={packageJson}
-    >
-      {BrushSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default BrushPage;

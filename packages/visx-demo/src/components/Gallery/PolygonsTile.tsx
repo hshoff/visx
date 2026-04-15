@@ -1,9 +1,9 @@
 import React from 'react';
-import type { PolygonProps } from '../../sandboxes/visx-polygons/Example';
-import Polygon, { background } from '../../sandboxes/visx-polygons/Example';
+import type { PolygonProps } from '../../examples/visx-polygons/example';
+import Polygon, { background } from '../../examples/visx-polygons/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-polygons/package.json';
+export { default as packageJson } from '../../examples/visx-polygons/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: 'white' };

@@ -1,12 +1,12 @@
 import React from 'react';
-import type { BarGroupHorizontalProps } from '../../sandboxes/visx-bargroup-horizontal/Example';
+import type { BarGroupHorizontalProps } from '../../examples/visx-bargroup-horizontal/example';
 import BarGroupHorizontal, {
   background,
   green,
-} from '../../sandboxes/visx-bargroup-horizontal/Example';
+} from '../../examples/visx-bargroup-horizontal/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-bargroup-horizontal/package.json';
+export { default as packageJson } from '../../examples/visx-bargroup-horizontal/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: green };

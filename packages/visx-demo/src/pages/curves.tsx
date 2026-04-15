@@ -1,19 +1,35 @@
 import React from 'react';
-import Lines from '../sandboxes/visx-curve/Example';
-import packageJson from '../sandboxes/visx-curve/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Lines from '../examples/visx-curve/example';
+import packageJson from '../examples/visx-curve/package.json';
 import Show from '../components/Show';
-import LinesSource from '!!raw-loader!../sandboxes/visx-curve/Example';
 
-function CurvesPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-curve');
+
+type CurvesPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<CurvesPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function CurvesPage({ exampleSource, highlightedCodeHtml }: CurvesPageProps) {
   return (
     <Show
       component={Lines}
       title="Curves"
-      codeSandboxDirectoryName="visx-curve"
       packageJson={packageJson}
-    >
-      {LinesSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default CurvesPage;

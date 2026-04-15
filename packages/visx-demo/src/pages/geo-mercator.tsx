@@ -1,20 +1,36 @@
 import React from 'react';
-import GeoMercator from '../sandboxes/visx-geo-mercator/Example';
-import packageJson from '../sandboxes/visx-geo-mercator/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import GeoMercator from '../examples/visx-geo-mercator/example';
+import packageJson from '../examples/visx-geo-mercator/package.json';
 import Show from '../components/Show';
-import GeoMercatorSource from '!!raw-loader!../sandboxes/visx-geo-mercator/Example';
 
-function GeoMercatorPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-geo-mercator');
+
+type GeoMercatorPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<GeoMercatorPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function GeoMercatorPage({ exampleSource, highlightedCodeHtml }: GeoMercatorPageProps) {
   return (
     <Show
       events
       component={GeoMercator}
       title="Geo Mercator"
-      codeSandboxDirectoryName="visx-geo-mercator"
       packageJson={packageJson}
-    >
-      {GeoMercatorSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default GeoMercatorPage;

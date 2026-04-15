@@ -1,20 +1,36 @@
 import React from 'react';
-import GeoCustom from '../sandboxes/visx-geo-custom/Example';
-import packageJson from '../sandboxes/visx-geo-custom/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import GeoCustom from '../examples/visx-geo-custom/example';
+import packageJson from '../examples/visx-geo-custom/package.json';
 import Show from '../components/Show';
-import GeoCustomSource from '!!raw-loader!../sandboxes/visx-geo-custom/Example';
 
-function GeoCustomPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-geo-custom');
+
+type GeoCustomPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<GeoCustomPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function GeoCustomPage({ exampleSource, highlightedCodeHtml }: GeoCustomPageProps) {
   return (
     <Show
       events
       component={GeoCustom}
       title="Geo Custom"
-      codeSandboxDirectoryName="visx-geo-custom"
       packageJson={packageJson}
-    >
-      {GeoCustomSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default GeoCustomPage;

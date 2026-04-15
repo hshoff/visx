@@ -1,9 +1,9 @@
 import React from 'react';
-import type { CurveProps } from '../../sandboxes/visx-curve/Example';
-import Curve from '../../sandboxes/visx-curve/Example';
+import type { CurveProps } from '../../examples/visx-curve/example';
+import Curve from '../../examples/visx-curve/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-curve/package.json';
+export { default as packageJson } from '../../examples/visx-curve/package.json';
 
 const tileStyles = { border: '1px solid lightgray' };
 const detailsStyles = { color: '#222' };

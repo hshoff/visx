@@ -1,12 +1,12 @@
 import React from 'react';
-import type { BarStackHorizontalProps } from '../../sandboxes/visx-barstack-horizontal/Example';
+import type { BarStackHorizontalProps } from '../../examples/visx-barstack-horizontal/example';
 import BarStackHorizontal, {
   background,
   purple3,
-} from '../../sandboxes/visx-barstack-horizontal/Example';
+} from '../../examples/visx-barstack-horizontal/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-barstack-horizontal/package.json';
+export { default as packageJson } from '../../examples/visx-barstack-horizontal/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: purple3, zIndex: 1 };

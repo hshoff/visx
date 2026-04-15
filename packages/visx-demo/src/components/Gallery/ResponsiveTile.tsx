@@ -1,9 +1,9 @@
 import React from 'react';
-import type { ResponsiveProps } from '../../sandboxes/visx-responsive/Example';
-import Responsive from '../../sandboxes/visx-responsive/Example';
+import type { ResponsiveProps } from '../../examples/visx-responsive/example';
+import Responsive from '../../examples/visx-responsive/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-responsive/package.json';
+export { default as packageJson } from '../../examples/visx-responsive/package.json';
 
 const tileStyles = { background: 'white' };
 const detailsStyles = {

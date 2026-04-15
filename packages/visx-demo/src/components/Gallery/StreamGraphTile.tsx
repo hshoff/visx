@@ -1,9 +1,9 @@
 import React from 'react';
-import type { StreamGraphProps } from '../../sandboxes/visx-streamgraph/Example';
-import StreamGraph, { BACKGROUND as background } from '../../sandboxes/visx-streamgraph/Example';
+import type { StreamGraphProps } from '../../examples/visx-streamgraph/example';
+import StreamGraph, { BACKGROUND as background } from '../../examples/visx-streamgraph/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-streamgraph/package.json';
+export { default as packageJson } from '../../examples/visx-streamgraph/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: 'rgb(93,30,91)' };

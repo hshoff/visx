@@ -1,10 +1,27 @@
 import React from 'react';
-import Patterns from '../sandboxes/visx-pattern/Example';
-import packageJson from '../sandboxes/visx-pattern/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Patterns from '../examples/visx-pattern/example';
+import packageJson from '../examples/visx-pattern/package.json';
 import Show from '../components/Show';
-import PatternsSource from '!!raw-loader!../sandboxes/visx-pattern/Example';
 
-function PatternsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-pattern');
+
+type PatternsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<PatternsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function PatternsPage({ exampleSource, highlightedCodeHtml }: PatternsPageProps) {
   return (
     <Show
       component={Patterns}
@@ -15,11 +32,10 @@ function PatternsPage() {
         right: 10,
         bottom: 10,
       }}
-      codeSandboxDirectoryName="visx-pattern"
       packageJson={packageJson}
-    >
-      {PatternsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default PatternsPage;

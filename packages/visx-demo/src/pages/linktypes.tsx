@@ -1,15 +1,31 @@
 import React from 'react';
-import LinkTypes from '../sandboxes/visx-linktypes/Example';
-import packageJson from '../sandboxes/visx-linktypes/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import LinkTypes from '../examples/visx-linktypes/example';
+import packageJson from '../examples/visx-linktypes/package.json';
 import Show from '../components/Show';
-import LinkTypesSource from '!!raw-loader!../sandboxes/visx-linktypes/Example';
 
-function LinkTypesPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-linktypes');
+
+type LinktypesPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<LinktypesPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function LinkTypesPage({ exampleSource, highlightedCodeHtml }: LinktypesPageProps) {
   return (
     <Show
       events
       title="Link Types"
-      codeSandboxDirectoryName="visx-linktypes"
       component={LinkTypes}
       margin={{
         top: 40,
@@ -18,9 +34,9 @@ function LinkTypesPage() {
         bottom: 40,
       }}
       packageJson={packageJson}
-    >
-      {LinkTypesSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default LinkTypesPage;

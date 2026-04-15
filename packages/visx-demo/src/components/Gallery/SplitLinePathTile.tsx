@@ -1,11 +1,11 @@
 import React from 'react';
-import type { SplitLinePathExampleProps } from '../../sandboxes/visx-shape-splitlinepath/Example';
+import type { SplitLinePathExampleProps } from '../../examples/visx-shape-splitlinepath/example';
 import SplitLinePathExample, {
   backgroundLight,
-} from '../../sandboxes/visx-shape-splitlinepath/Example';
+} from '../../examples/visx-shape-splitlinepath/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-shape-splitlinepath/package.json';
+export { default as packageJson } from '../../examples/visx-shape-splitlinepath/package.json';
 
 const tileStyles = { background: backgroundLight };
 const detailsStyles = { color: 'white' };

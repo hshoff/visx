@@ -1,15 +1,31 @@
 import React from 'react';
-import Dendrograms from '../sandboxes/visx-dendrogram/Example';
-import packageJson from '../sandboxes/visx-dendrogram/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Dendrograms from '../examples/visx-dendrogram/example';
+import packageJson from '../examples/visx-dendrogram/package.json';
 import Show from '../components/Show';
-import DendrogramsSource from '!!raw-loader!../sandboxes/visx-dendrogram/Example';
 
-function DendrogramsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-dendrogram');
+
+type DendrogramsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<DendrogramsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function DendrogramsPage({ exampleSource, highlightedCodeHtml }: DendrogramsPageProps) {
   return (
     <Show
       events
       title="Dendrograms"
-      codeSandboxDirectoryName="visx-dendrogram"
       component={Dendrograms}
       margin={{
         top: 80,
@@ -18,9 +34,9 @@ function DendrogramsPage() {
         bottom: 80,
       }}
       packageJson={packageJson}
-    >
-      {DendrogramsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default DendrogramsPage;

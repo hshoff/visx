@@ -1,9 +1,9 @@
 import React from 'react';
-import type { VoronoiProps } from '../../sandboxes/visx-voronoi/Example';
-import Voronoi from '../../sandboxes/visx-voronoi/Example';
+import type { VoronoiProps } from '../../examples/visx-voronoi/example';
+import Voronoi from '../../examples/visx-voronoi/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-voronoi/package.json';
+export { default as packageJson } from '../../examples/visx-voronoi/package.json';
 
 const tileStyles = {
   background: '#eb6d88',

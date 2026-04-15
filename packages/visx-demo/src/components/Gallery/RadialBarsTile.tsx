@@ -1,9 +1,9 @@
 import React from 'react';
-import type { RadialBarsProps } from '../../sandboxes/visx-radial-bars/Example';
-import RadialBars from '../../sandboxes/visx-radial-bars/Example';
+import type { RadialBarsProps } from '../../examples/visx-radial-bars/example';
+import RadialBars from '../../examples/visx-radial-bars/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-radial-bars/package.json';
+export { default as packageJson } from '../../examples/visx-radial-bars/package.json';
 
 const tileStyles = { background: '#3dbdb1' };
 const detailsStyles = { color: '#93F9B9' };

@@ -1,9 +1,9 @@
 import React from 'react';
-import type { PieProps } from '../../sandboxes/visx-shape-pie/Example';
-import Pie from '../../sandboxes/visx-shape-pie/Example';
+import type { PieProps } from '../../examples/visx-shape-pie/example';
+import Pie from '../../examples/visx-shape-pie/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-shape-pie/package.json';
+export { default as packageJson } from '../../examples/visx-shape-pie/package.json';
 
 const tileStyles = { background: '#7f82e3' };
 const detailsStyles = { color: 'rgb(93,30,91)' };

@@ -1,24 +1,40 @@
 import React from 'react';
-import Wordcloud from '../sandboxes/visx-wordcloud/Example';
-import packageJson from '../sandboxes/visx-wordcloud/package.json';
-import WordcloudSource from '!!raw-loader!../sandboxes/visx-wordcloud/Example';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Wordcloud from '../examples/visx-wordcloud/example';
+import packageJson from '../examples/visx-wordcloud/package.json';
 import Show from '../components/Show';
+
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-wordcloud');
+
+type WordcloudPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<WordcloudPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
 import type { WidthAndHeight } from '../types';
 
 const component = ({ width, height }: WidthAndHeight) => (
   <Wordcloud width={width} height={height} showControls />
 );
 
-function WordcloudPage() {
+function WordcloudPage({ exampleSource, highlightedCodeHtml }: WordcloudPageProps) {
   return (
     <Show
       component={component}
       title="Wordcloud"
-      codeSandboxDirectoryName="visx-wordcloud"
       packageJson={packageJson}
-    >
-      {WordcloudSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default WordcloudPage;

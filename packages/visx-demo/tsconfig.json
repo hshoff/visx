@@ -25,7 +25,7 @@
   "exclude": [
     "lib",
     "test",
-    "src/sandboxes/**/package.json"
+    "src/examples/**/package.json"
   ],
   "include": [
     "src/**/*.{ts,tsx}",

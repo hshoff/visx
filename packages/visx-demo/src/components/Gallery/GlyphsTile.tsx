@@ -1,9 +1,9 @@
 import React from 'react';
-import type { GlyphProps } from '../../sandboxes/visx-glyph/Example';
-import Glyph, { primaryColor, secondaryColor } from '../../sandboxes/visx-glyph/Example';
+import type { GlyphProps } from '../../examples/visx-glyph/example';
+import Glyph, { primaryColor, secondaryColor } from '../../examples/visx-glyph/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-glyph/package.json';
+export { default as packageJson } from '../../examples/visx-glyph/package.json';
 
 const tileStyles = { background: secondaryColor };
 const detailsStyles = { color: primaryColor };

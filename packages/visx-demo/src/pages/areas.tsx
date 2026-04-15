@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
 import React from 'react';
+import path from 'path';
 import type { GetStaticProps } from 'next';
-import Area from '../sandboxes/visx-area/Example';
-import packageJson from '../sandboxes/visx-area/package.json';
+import Area from '../examples/visx-area/example';
+import packageJson from '../examples/visx-area/package.json';
 import Show from '../components/Show';
 import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
 
-const EXAMPLE_FILE = path.join(process.cwd(), 'src/sandboxes/visx-area/Example.tsx');
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-area');
 
 type AreasPageProps = {
   exampleSource: string;
@@ -15,7 +15,7 @@ type AreasPageProps = {
 };
 
 export const getStaticProps: GetStaticProps<AreasPageProps> = async () => {
-  const exampleSource = fs.readFileSync(EXAMPLE_FILE, 'utf8');
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
   const highlightedCodeHtml = await highlightExampleCode(exampleSource);
   return { props: { exampleSource, highlightedCodeHtml } };
 };
@@ -25,7 +25,6 @@ function AreasPage({ exampleSource, highlightedCodeHtml }: AreasPageProps) {
     <Show
       component={Area}
       title="Areas"
-      codeSandboxDirectoryName="visx-area"
       packageJson={packageJson}
       exampleSource={exampleSource}
       highlightedCodeHtml={highlightedCodeHtml}

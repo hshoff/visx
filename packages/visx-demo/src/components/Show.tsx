@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import cx from 'classnames';
 import type { WithScreenSizeProvidedProps } from '@visx/responsive';
 import { withScreenSize } from '@visx/responsive';
-import CodeSandboxLink from './CodeSandboxLink';
 import Page from './Page';
 import Codeblock from './Codeblock';
 import ExampleViewer from './ExampleViewer';
@@ -20,7 +19,6 @@ type ShowProps = {
   highlightedCodeHtml?: string;
   title: string;
   component: Component<ShowProvidedProps>;
-  codeSandboxDirectoryName?: string;
   shadow?: boolean;
   events?: boolean;
   margin?: MarginShape;
@@ -41,7 +39,6 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
     events = false,
     margin,
     description,
-    codeSandboxDirectoryName,
     packageJson,
     exampleSource,
     highlightedCodeHtml,
@@ -73,11 +70,6 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
                 {React.createElement(description, { width, height })}
               </div>
             )}
-            {useExampleViewer && codeSandboxDirectoryName && (
-              <div className="sandbox-link">
-                <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
-              </div>
-            )}
             {!useExampleViewer ? (
               <>
                 <div className={cx(!!shadow && 'shadow', title.split(' ').join('-'), 'chart')}>
@@ -89,11 +81,6 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
                   })}
                 </div>
                 {description && React.createElement(description, { width, height })}
-                {codeSandboxDirectoryName && (
-                  <div className="sandbox-link">
-                    <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
-                  </div>
-                )}
               </>
             ) : null}
             {visxDeps.length > 0 && (

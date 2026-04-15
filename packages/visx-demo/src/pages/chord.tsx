@@ -1,19 +1,35 @@
 import React from 'react';
-import Chord from '../sandboxes/visx-chord/Example';
-import packageJson from '../sandboxes/visx-chord/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Chord from '../examples/visx-chord/example';
+import packageJson from '../examples/visx-chord/package.json';
 import Show from '../components/Show';
-import ChordSource from '!!raw-loader!../sandboxes/visx-chord/Example';
 
-function ChordPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-chord');
+
+type ChordPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<ChordPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function ChordPage({ exampleSource, highlightedCodeHtml }: ChordPageProps) {
   return (
     <Show
       component={Chord}
       title="Chords"
-      codeSandboxDirectoryName="visx-chord"
       packageJson={packageJson}
-    >
-      {ChordSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default ChordPage;

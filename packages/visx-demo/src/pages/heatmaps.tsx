@@ -1,10 +1,27 @@
 import React from 'react';
-import Heatmaps from '../sandboxes/visx-heatmap/Example';
-import packageJson from '../sandboxes/visx-heatmap/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import Heatmaps from '../examples/visx-heatmap/example';
+import packageJson from '../examples/visx-heatmap/package.json';
 import Show from '../components/Show';
-import HeatmapsSource from '!!raw-loader!../sandboxes/visx-heatmap/Example';
 
-function HeatmapsPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-heatmap');
+
+type HeatmapsPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<HeatmapsPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function HeatmapsPage({ exampleSource, highlightedCodeHtml }: HeatmapsPageProps) {
   return (
     <Show
       events
@@ -16,11 +33,10 @@ function HeatmapsPage() {
       }}
       component={Heatmaps}
       title="Heatmaps"
-      codeSandboxDirectoryName="visx-heatmap"
       packageJson={packageJson}
-    >
-      {HeatmapsSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default HeatmapsPage;

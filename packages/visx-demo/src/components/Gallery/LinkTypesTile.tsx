@@ -1,9 +1,9 @@
 import React from 'react';
-import type { LinkTypesProps } from '../../sandboxes/visx-linktypes/Example';
-import LinkTypes from '../../sandboxes/visx-linktypes/Example';
+import type { LinkTypesProps } from '../../examples/visx-linktypes/example';
+import LinkTypes from '../../examples/visx-linktypes/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-linktypes/package.json';
+export { default as packageJson } from '../../examples/visx-linktypes/package.json';
 
 const tileStyles = { background: '#272b4d' };
 const detailsStyles = { color: '#269688' };

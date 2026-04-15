@@ -1,19 +1,35 @@
 import React from 'react';
-import XYChart from '../sandboxes/visx-xychart/Example';
-import packageJson from '../sandboxes/visx-xychart/package.json';
+import path from 'path';
+import type { GetStaticProps } from 'next';
+import { highlightExampleCode } from '../components/ExampleViewer';
+import { loadExampleSourceBundle } from '../utils/loadExampleSourceBundle';
+import XYChart from '../examples/visx-xychart/example';
+import packageJson from '../examples/visx-xychart/package.json';
 import Show from '../components/Show';
-import XYChartSource from '!!raw-loader!../sandboxes/visx-xychart/Example';
 
-function XYChartPage() {
+const EXAMPLE_DIR = path.join(process.cwd(), 'src/examples/visx-xychart');
+
+type XychartPageProps = {
+  exampleSource: string;
+  highlightedCodeHtml: string;
+};
+
+export const getStaticProps: GetStaticProps<XychartPageProps> = async () => {
+  const exampleSource = loadExampleSourceBundle(EXAMPLE_DIR);
+  const highlightedCodeHtml = await highlightExampleCode(exampleSource);
+  return { props: { exampleSource, highlightedCodeHtml } };
+};
+
+
+function XYChartPage({ exampleSource, highlightedCodeHtml }: XychartPageProps) {
   return (
     <Show
       component={XYChart}
       title="XYChart"
-      codeSandboxDirectoryName="visx-xychart"
       packageJson={packageJson}
-    >
-      {XYChartSource}
-    </Show>
+      exampleSource={exampleSource}
+      highlightedCodeHtml={highlightedCodeHtml}
+    />
   );
 }
 export default XYChartPage;

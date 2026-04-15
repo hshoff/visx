@@ -1,9 +1,9 @@
 import React from 'react';
-import type { TreemapProps } from '../../sandboxes/visx-treemap/Example';
-import Treemap, { background, color1 } from '../../sandboxes/visx-treemap/Example';
+import type { TreemapProps } from '../../examples/visx-treemap/example';
+import Treemap, { background, color1 } from '../../examples/visx-treemap/example';
 import GalleryTile from '../GalleryTile';
 
-export { default as packageJson } from '../../sandboxes/visx-treemap/package.json';
+export { default as packageJson } from '../../examples/visx-treemap/package.json';
 
 const tileStyles = { background };
 const detailsStyles = { color: color1 };

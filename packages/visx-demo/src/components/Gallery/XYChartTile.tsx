@@ -1,6 +1,6 @@
 import React from 'react';
-import type { XYChartProps } from '../../sandboxes/visx-xychart/Example';
-import XYChart from '../../sandboxes/visx-xychart/Example';
+import type { XYChartProps } from '../../examples/visx-xychart/example';
+import XYChart from '../../examples/visx-xychart/example';
 import GalleryTile from '../GalleryTile';
 
 function XYChartWrapper(props) {
@@ -8,7 +8,7 @@ function XYChartWrapper(props) {
   return <XYChart {...props} />;
 }
 
-export { default as packageJson } from '../../sandboxes/visx-xychart/package.json';
+export { default as packageJson } from '../../examples/visx-xychart/package.json';
 
 const tileStyles = { background: '#222' };
 
