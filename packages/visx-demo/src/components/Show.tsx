@@ -5,6 +5,7 @@ import { withScreenSize } from '@visx/responsive';
 import CodeSandboxLink from './CodeSandboxLink';
 import Page from './Page';
 import Codeblock from './Codeblock';
+import ExampleViewer from './ExampleViewer';
 import type { MarginShape, ShowProvidedProps, PackageJson } from '../types';
 import VisxDocLink from './VisxDocLink';
 import extractVisxDepsFromPackageJson from './util/extractVisxDepsFromPackageJson';
@@ -13,6 +14,10 @@ type Component<P = {}> = React.FC<P> | React.ComponentClass<P>;
 
 type ShowProps = {
   children?: string;
+  /** Raw example source (prefer with highlightedCodeHtml from getStaticProps). */
+  exampleSource?: string;
+  /** Pre-highlighted HTML from highlightExampleCode (build time). */
+  highlightedCodeHtml?: string;
   title: string;
   component: Component<ShowProvidedProps>;
   codeSandboxDirectoryName?: string;
@@ -38,30 +43,59 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
     description,
     codeSandboxDirectoryName,
     packageJson,
+    exampleSource,
+    highlightedCodeHtml,
   }: ShowProps & WithScreenSizeProvidedProps) => {
     const width = Math.min(800, (screenWidth || 0) - padding);
     const height = width * 0.6;
     const visxDeps = useMemo(() => extractVisxDepsFromPackageJson(packageJson), [packageJson]);
+    const codeSource = exampleSource ?? (typeof children === 'string' ? children : undefined);
+    const useExampleViewer = Boolean(highlightedCodeHtml && codeSource);
 
     return (
       <Page title={title}>
         <div className="container">
-          <div style={{ width }}>
+          <div style={{ width: useExampleViewer ? '100%' : width, maxWidth: 800 }}>
             <h1>{title}</h1>
-            <div className={cx(!!shadow && 'shadow', title.split(' ').join('-'), 'chart')}>
-              {React.createElement(component, {
-                width,
-                height,
-                margin,
-                events,
-              })}
-            </div>
-            {description && React.createElement(description, { width, height })}
-            {codeSandboxDirectoryName && (
+            {useExampleViewer ? (
+              <ExampleViewer
+                component={component}
+                source={codeSource}
+                highlightedCodeHtml={highlightedCodeHtml}
+                shadow={shadow}
+                events={events}
+                margin={margin}
+                chartClassName={cx(!!shadow && 'shadow', title.split(' ').join('-'), 'chart')}
+              />
+            ) : null}
+            {useExampleViewer && description && (
+              <div style={{ width: '100%', maxWidth: 800 }}>
+                {React.createElement(description, { width, height })}
+              </div>
+            )}
+            {useExampleViewer && codeSandboxDirectoryName && (
               <div className="sandbox-link">
                 <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
               </div>
             )}
+            {!useExampleViewer ? (
+              <>
+                <div className={cx(!!shadow && 'shadow', title.split(' ').join('-'), 'chart')}>
+                  {React.createElement(component, {
+                    width,
+                    height,
+                    margin,
+                    events,
+                  })}
+                </div>
+                {description && React.createElement(description, { width, height })}
+                {codeSandboxDirectoryName && (
+                  <div className="sandbox-link">
+                    <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
+                  </div>
+                )}
+              </>
+            ) : null}
             {visxDeps.length > 0 && (
               <>
                 <h2>Documentation</h2>
@@ -72,7 +106,7 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
                 </div>
               </>
             )}
-            {children && (
+            {!useExampleViewer && children && (
               <>
                 <h2>Code</h2>
                 <div className="code">

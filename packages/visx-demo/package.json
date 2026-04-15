@@ -85,8 +85,14 @@
     "react-dom": "^19.0.0",
     "react-github-button": "^0.1.10",
     "react-markdown": "^9.0.1",
+    "rehype-pretty-code": "^0.14.3",
     "rehype-raw": "^7.0.0",
-    "topojson-client": "^3.0.0"
+    "rehype-stringify": "^10.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "shiki": "^4.0.2",
+    "topojson-client": "^3.0.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0"

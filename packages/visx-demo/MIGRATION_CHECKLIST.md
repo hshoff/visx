@@ -79,8 +79,10 @@ Use this section to tick off work after Step 1.
 
 ### Step 2 — ExampleViewer
 
-- [ ] Add `src/components/ExampleViewer.tsx` (preview + Shiki code + copy button)
-- [ ] Wire build-time file read for source
+- [x] Add `src/components/ExampleViewer/` — `ExampleViewerClient.tsx` (`'use client'`), `highlightExampleCode.ts` (Shiki + rehype-pretty-code), `index.tsx`
+- [x] Dependencies: `shiki`, `rehype-pretty-code`, `unified`, `remark-parse`, `remark-rehype`, `rehype-stringify`
+- [x] `Show` accepts optional `exampleSource` + `highlightedCodeHtml` (inline viewer + legacy Codeblock path)
+- [x] Reference wiring: `pages/areas.tsx` uses `getStaticProps` + `fs.readFileSync` for `visx-area/Example.tsx` (other pages: same pattern in Step 3)
 
 ### Step 3 — Migrate examples
 
