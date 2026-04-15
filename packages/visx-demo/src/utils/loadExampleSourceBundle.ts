@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 /**
- * Collect all example source files under an example directory (excluding CodeSandbox
- * entry `index.tsx` and `package.json`) for static code display. Concatenates files with
+ * Collect all example source files under an example directory (excluding `index.tsx`,
+ * `package.json`, and non-source assets) for static code display. Concatenates files with
  * path markers so multi-file demos (e.g. brush + AreaChart, xychart) show full context.
  */
 export function loadExampleSourceBundle(exampleDir: string): string {

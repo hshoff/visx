@@ -94,11 +94,13 @@ For each row in **Full inventory** with a `visx-*` name:
 - [x] Delete `src/sandboxes/` (done in Step 3 with this branch)
 - [x] Remove CodeSandbox link component / `codeSandboxDirectoryName` props
 - [x] `exampleToVisxDependencyLookup` → `src/utils/exampleToVisxDependencyLookup.ts`
+- [x] Remove unused per-example `index.tsx` (old `ReactDOM` entry points) under `src/examples/`
 
 ### Step 5 — Verify
 
-- [ ] Smoke test all gallery routes
-- [ ] Tests / CI green
+- [x] `yarn workspace @visx/demo build` (after `yarn run babel`, `yarn run build:vendor`, `yarn run docs:generate`)
+- [x] `yarn test` (1047 tests)
+- [ ] Manual smoke test in browser (Preview + Code + copy on representative routes)
 
 ---
 
