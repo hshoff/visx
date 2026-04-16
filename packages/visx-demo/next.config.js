@@ -1,3 +1,5 @@
+const path = require('path');
+
 const nextConfig = {
   output: 'export',
   typescript: {
@@ -11,6 +13,13 @@ const nextConfig = {
   // Transpile visx packages during production builds.
   // TypeScript project references cause Next.js webpack to resolve to source files,
   // so we need to transpile them with SWC (same as dev mode does automatically).
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.join(__dirname, 'src'),
+    };
+    return config;
+  },
   transpilePackages: [
     '@visx/annotation',
     '@visx/axis',

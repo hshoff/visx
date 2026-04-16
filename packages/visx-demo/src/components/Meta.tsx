@@ -58,9 +58,9 @@ function Meta({ title = 'visualization components' }) {
           overflow-x: hidden;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu',
             'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-          background: #ffffff;
+          background: hsl(var(--background));
           display: flex;
-          color: white;
+          color: hsl(var(--foreground));
           padding: 0;
           margin: 0;
           font-size: 22px;

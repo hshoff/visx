@@ -1,6 +1,7 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import 'prismjs/themes/prism.css';
+import '../styles/globals.css';
 import NoSsr from '../components/NoSsr';
 
 function MyApp({ Component, pageProps }: AppProps) {

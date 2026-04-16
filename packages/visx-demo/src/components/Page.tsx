@@ -1,7 +1,7 @@
 import React from 'react';
-import cx from 'classnames';
 import Meta from './Meta';
 import Nav from './Nav';
+import { cn } from '@/utils/cn';
 
 function Page({
   children,
@@ -15,30 +15,18 @@ function Page({
   wrapper?: boolean;
 }) {
   return (
-    <div className={cx('main', { wrapper }, className)}>
+    <div
+      className={cn(
+        'flex min-h-screen flex-col text-foreground',
+        wrapper && 'wrapper',
+        typeof className === 'string' && className,
+      )}
+    >
       <Meta title={title} />
-      <div className="nav-container">
-        <Nav />
-      </div>
-      <div className="page-content">{children}</div>
-      <style jsx>{`
-        .main {
-          width: 95vw;
-          margin: 0 auto;
-          overflow-x: hidden;
-        }
-        .page-content {
-          margin: 69px 0 40px;
-          color: #161616;
-          overflow-y: auto;
-          overflow-x: hidden;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .nav-container {
-          background: #ffffff;
-        }
-      `}</style>
+      <Nav />
+      <main className={cn('flex-1 px-4 pb-10 pt-6 sm:px-6', wrapper && 'mx-auto w-full max-w-[105rem]')}>
+        {children}
+      </main>
     </div>
   );
 }
