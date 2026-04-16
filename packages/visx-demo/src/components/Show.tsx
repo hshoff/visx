@@ -8,6 +8,8 @@ import Codeblock from './Codeblock';
 import type { MarginShape, ShowProvidedProps, PackageJson } from '../types';
 import VisxDocLink from './VisxDocLink';
 import extractVisxDepsFromPackageJson from './util/extractVisxDepsFromPackageJson';
+import { Card, CardContent } from '@/components/ui/card';
+import { DemoPageCardSection, DemoPageLayout, DemoPageSection } from './DemoPageLayout';
 
 type Component<P = {}> = React.FC<P> | React.ComponentClass<P>;
 
@@ -45,78 +47,58 @@ const Show = withScreenSize<ShowProps & WithScreenSizeProvidedProps>(
 
     return (
       <Page title={title}>
-        <div className="container">
-          <div style={{ width }}>
-            <h1>{title}</h1>
-            <div className={cx(!!shadow && 'shadow', title.split(' ').join('-'), 'chart')}>
-              {React.createElement(component, {
-                width,
-                height,
-                margin,
-                events,
-              })}
-            </div>
-            {description && React.createElement(description, { width, height })}
-            {codeSandboxDirectoryName && (
-              <div className="sandbox-link">
-                <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
+        <DemoPageLayout>
+          <header className="text-center">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              {title}
+            </h1>
+          </header>
+
+          <Card className={cx('overflow-hidden border-border', shadow && 'shadow-md')}>
+            <CardContent className="p-0">
+              <div
+                className={cx(
+                  !!shadow && 'shadow-none',
+                  title.split(' ').join('-'),
+                  'chart min-w-0 rounded-xl',
+                )}
+              >
+                {React.createElement(component, {
+                  width,
+                  height,
+                  margin,
+                  events,
+                })}
               </div>
-            )}
-            {visxDeps.length > 0 && (
-              <>
-                <h2>Documentation</h2>
-                <div className="doc-links">
-                  {visxDeps.map((packageName) => (
-                    <VisxDocLink key={packageName} packageName={packageName} />
-                  ))}
-                </div>
-              </>
-            )}
-            {children && (
-              <>
-                <h2>Code</h2>
-                <div className="code">
-                  <Codeblock>{children}</Codeblock>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-        <style jsx>{`
-          .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-            margin-bottom: 40px;
-          }
-          .container h1 {
-            margin-top: 15px;
-            line-height: 0.9em;
-            letter-spacing: -0.03em;
-          }
-          .container h2 {
-            margin-top: 15px;
-            margin-bottom: 5px;
-          }
-          .chart {
-            border-radius: 14px;
-          }
-          .shadow {
-            border-radius: 14px;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-          }
-          .sandbox-link {
-            display: flex;
-            justify-content: flex-end;
-          }
-          .doc-links {
-            font-size: 13px;
-          }
-          .doc-links :global(a) {
-            margin-right: 6px;
-          }
-        `}</style>
+            </CardContent>
+          </Card>
+
+          {description && React.createElement(description, { width, height })}
+
+          {codeSandboxDirectoryName && (
+            <div className="flex justify-end">
+              <CodeSandboxLink exampleDirectoryName={codeSandboxDirectoryName} />
+            </div>
+          )}
+
+          {visxDeps.length > 0 && (
+            <DemoPageSection title="Documentation">
+              <div className="doc-links flex flex-wrap gap-2 text-sm">
+                {visxDeps.map((packageName) => (
+                  <VisxDocLink key={packageName} packageName={packageName} />
+                ))}
+              </div>
+            </DemoPageSection>
+          )}
+
+          {children && (
+            <DemoPageCardSection title="Code">
+              <div className="code min-w-0 overflow-x-auto rounded-md border border-border bg-muted/30">
+                <Codeblock>{children}</Codeblock>
+              </div>
+            </DemoPageCardSection>
+          )}
+        </DemoPageLayout>
       </Page>
     );
   },

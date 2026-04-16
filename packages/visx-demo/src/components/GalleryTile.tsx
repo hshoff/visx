@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ParentSize } from '@visx/responsive';
 import type { WidthAndHeight } from '../types';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/utils/cn';
 
 type Props<ExampleProps extends WidthAndHeight> = {
   description?: string;
@@ -17,7 +19,7 @@ type Props<ExampleProps extends WidthAndHeight> = {
 
 const renderLinkWrapper = (url: string | undefined, node: React.ReactNode) =>
   url ? (
-    <Link href={url} style={{ display: 'block', flex: 1, minWidth: 0, height: '100%' }}>
+    <Link href={url} className="flex min-h-0 min-w-0 flex-1 flex-col">
       {node}
     </Link>
   ) : (
@@ -77,9 +79,14 @@ export default function GalleryTile<ExampleProps extends WidthAndHeight>({
     <>
       {renderLinkWrapper(
         exampleUrl,
-        <div ref={ref} className="gallery-tile" style={tileStyles}>
-          <div className="image">
-            {/** lazy render */}
+        <Card
+          ref={ref}
+          style={tileStyles}
+          className={cn(
+            'group m-1 flex h-[390px] min-w-[min(100%,300px)] flex-1 cursor-pointer flex-col overflow-hidden border-0 transition-shadow hover:shadow-md sm:min-w-[45%] md:min-w-[300px]',
+          )}
+        >
+          <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
             {everVisible && (
               <ParentSize>
                 {({ width, height }) =>
@@ -93,70 +100,22 @@ export default function GalleryTile<ExampleProps extends WidthAndHeight>({
             )}
           </div>
           {(title || description) && (
-            <div className="details" style={detailsStyles}>
-              {title && <div className="title">{title}</div>}
+            <div
+              className="shrink-0 px-5 py-4 text-center text-sm"
+              style={detailsStyles}
+            >
+              {title && <div className="font-black leading-tight tracking-tight">{title}</div>}
               {description && (
-                <div className="description">
-                  <pre>{description}</pre>
+                <div className="mt-1 font-light opacity-95">
+                  <pre className="m-0 min-w-0 whitespace-pre-wrap break-words bg-transparent p-0 font-sans text-[13px] leading-snug">
+                    {description}
+                  </pre>
                 </div>
               )}
             </div>
           )}
-        </div>,
+        </Card>,
       )}
-      <style jsx>{`
-        h3 {
-          margin-top: 0;
-          margin-left: 40px;
-          margin-bottom: 0;
-        }
-        .gallery-tile {
-          background-color: white;
-          margin: 5px;
-          display: flex;
-          height: 390px;
-          flex: 1;
-          min-width: 300px;
-          flex-direction: column;
-          border-radius: 14px;
-          cursor: pointer;
-          text-decoration: none;
-          color: inherit;
-        }
-        .image {
-          flex: 1;
-          display: flex;
-          overflow: hidden;
-        }
-        .details {
-          text-align: center;
-          padding: 15px 20px;
-          color: #ffffff;
-        }
-        .title {
-          font-weight: 900;
-          line-height: 0.9rem;
-        }
-        .description {
-          font-weight: 300;
-          font-size: 14px;
-        }
-        pre {
-          margin: 0;
-          background-color: transparent;
-          min-width: unset;
-        }
-        @media (max-width: 960px) {
-          .gallery-tile {
-            min-width: 45%;
-          }
-        }
-        @media (max-width: 600px) {
-          .gallery-tile {
-            min-width: 100%;
-          }
-        }
-      `}</style>
     </>
   );
 }

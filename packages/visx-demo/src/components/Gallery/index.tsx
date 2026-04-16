@@ -53,6 +53,7 @@ import type { VisxPackage } from '../../types';
 import exampleToVisxDependencyLookup, {
   visxPackages,
 } from '../../sandboxes/exampleToVisxDependencyLookup';
+import { Button } from '@/components/ui/button';
 
 export const tiles = [
   BarsTile,
@@ -115,97 +116,39 @@ export default function Gallery() {
     : tiles;
 
   return (
-    <>
-      <div className="gallery">
-        <div className="filters">
-          <div className="filter-label">Filter</div>
-          {visxPackages.map((visxPackage) => (
-            <Link
-              key={visxPackage}
-              href={{
-                pathname: '/gallery',
-                query: routePackage === visxPackage ? undefined : { pkg: visxPackage },
-              }}
-              className={`filter-button ${routePackage === visxPackage ? 'emphasize' : ''}`}
-            >
-              {`${visxPackage}`}
-            </Link>
-          ))}
+    <div className="flex w-full min-w-0 flex-col gap-8 pb-10 lg:flex-row lg:gap-10">
+      <aside className="flex w-full flex-shrink-0 flex-col gap-2 lg:w-40">
+        <div className="text-sm font-semibold text-foreground">Filter</div>
+        <div className="flex flex-row flex-wrap gap-2 lg:flex-col lg:items-stretch">
+          {visxPackages.map((visxPackage) => {
+            const active = routePackage === visxPackage;
+            return (
+              <Button
+                key={visxPackage}
+                variant={active ? 'secondary' : 'outline'}
+                size="sm"
+                className="h-auto justify-start rounded-full px-3 py-1.5 text-left text-xs font-normal"
+                asChild
+              >
+                <Link
+                  href={{
+                    pathname: '/gallery',
+                    query: active ? undefined : { pkg: visxPackage },
+                  }}
+                >
+                  {visxPackage}
+                </Link>
+              </Button>
+            );
+          })}
         </div>
-        <div className="grid">
-          {filteredTiles.map((Tile, i) => (
-            /* eslint-disable react/jsx-pascal-case */
-            <Tile.default key={`tile-${i}`} />
-          ))}
-        </div>
+      </aside>
+      <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-[repeat(auto-fill,minmax(360px,1fr))]">
+        {filteredTiles.map((Tile, i) => (
+          /* eslint-disable react/jsx-pascal-case */
+          <Tile.default key={`tile-${i}`} />
+        ))}
       </div>
-      <style jsx>{`
-        .gallery {
-          display: flex;
-          flex-direction: row;
-        }
-        .grid {
-          width: 100%;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-          overflow-x: hidden;
-          padding-bottom: 40px;
-        }
-        .tilt > a {
-          display: flex;
-          flex: 1;
-        }
-        .filters {
-          margin-right: 24px;
-          width: 150px;
-          flex-shrink: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          a {
-            display: block;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            background: transparent;
-            padding: 0;
-            margin: 4px 4px 8px 0;
-            font-size: 16px;
-            line-height: 1em;
-            &.emphasize {
-              font-weight: 600;
-            }
-          }
-        }
-        h6 {
-          margin: 0 4px 0 0;
-        }
-        .filter-label {
-          font-size: 14px;
-          font-weight: 600;
-        }
-        @media (min-width: 800px) {
-          .emphasize::before {
-            content: '';
-            padding-left: 4px;
-            border-left: 2px solid #fc2e1c;
-          }
-        }
-        @media (max-width: 800px) {
-          .gallery {
-            flex-direction: column;
-            min-width: 90vw;
-            max-width: 90vw;
-            margin: 0;
-          }
-          .filters {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      `}</style>
-    </>
+    </div>
   );
 }
