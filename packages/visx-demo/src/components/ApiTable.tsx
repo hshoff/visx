@@ -25,7 +25,6 @@ export default function ApiTable({ docgenInfo }: Props) {
   const isFunction = kind === 'function';
   const sourceUrl = getGitHubUrl(filePath, lineNumber);
 
-  // required first, then abc order
   const props = useMemo(() => {
     const requiredProps: PropInfo[] = [];
     const optionalProps: PropInfo[] = [];
@@ -42,46 +41,67 @@ export default function ApiTable({ docgenInfo }: Props) {
   }, [docgenInfo]);
 
   return (
-    <div className="api">
-      <h3>
-        <a id={anchorId} href={`#${anchorId}`} className="export-name-anchor">
+    <div className="api border-b border-border pb-8 last:border-b-0 last:pb-0">
+      <h3 className="group mb-3 flex scroll-mt-24 flex-wrap items-baseline gap-x-2 gap-y-1 text-xl font-semibold tracking-tight text-foreground">
+        <a
+          id={anchorId}
+          href={`#${anchorId}`}
+          className="mr-1 inline-block scroll-mt-24 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+        >
           #
         </a>
         {toExportName(displayName)}
-        {kind === 'hook' && <span className="kind-badge hook">hook</span>}
-        {kind === 'function' && <span className="kind-badge function">function</span>}
+        {kind === 'hook' && (
+          <span className="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-950 dark:text-blue-200">
+            hook
+          </span>
+        )}
+        {kind === 'function' && (
+          <span className="inline-flex items-center rounded-md bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-950 dark:text-purple-200">
+            function
+          </span>
+        )}
         {sourceUrl && (
-          <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="source-link">
+          <a
+            href={sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-1 text-sm font-normal text-muted-foreground hover:text-foreground hover:underline"
+          >
             View Source →
           </a>
         )}
       </h3>
       {description && (
-        <div className="doc-description">
+        <div className="prose prose-neutral mb-4 max-w-none text-base dark:prose-invert prose-p:my-1">
           <Markdown>{description}</Markdown>
         </div>
       )}
       {isFunction && parameters && parameters.length > 0 ? (
         <>
-          <h4>Parameters</h4>
+          <h4 className="mb-2 mt-4 text-base font-semibold text-foreground">Parameters</h4>
           {parameters.map((param: ParamInfo) => {
             const id = `${displayName}_${param.name}`;
             return (
-              <div key={param.name} className="prop">
-                <div className="title">
-                  <span className="name">
-                    <a id={id} href={`#${id}`} className="api-anchor">
+              <div key={param.name} className="group/prop border-b border-border py-3 last:border-b-0">
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <span className="inline-flex items-baseline gap-1.5 text-base">
+                    <a
+                      id={id}
+                      href={`#${id}`}
+                      className="scroll-mt-24 text-muted-foreground opacity-0 transition-opacity group-hover/prop:opacity-100"
+                    >
                       #
-                    </a>{' '}
-                    <strong>{param.name}</strong>
+                    </a>
+                    <strong className="font-semibold text-foreground">{param.name}</strong>
                   </span>
                   {param.type && (
-                    <span className="typedef">
-                      <code>{param.type.name}</code>
-                    </span>
+                    <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground">
+                      {param.type.name}
+                    </code>
                   )}
                 </div>
-                <div className="description">
+                <div className="prose prose-neutral mt-2 max-w-none text-sm dark:prose-invert prose-p:my-1">
                   <Markdown>
                     {`${param.description || ''}${
                       param.defaultValue
@@ -94,8 +114,9 @@ export default function ApiTable({ docgenInfo }: Props) {
             );
           })}
           {returnType && (
-            <div className="return-type">
-              <strong>Returns:</strong> <code>{returnType}</code>
+            <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3 text-sm">
+              <strong className="text-foreground">Returns:</strong>{' '}
+              <code className="rounded bg-background px-1 py-0.5 font-mono text-sm">{returnType}</code>
             </div>
           )}
         </>
@@ -103,22 +124,30 @@ export default function ApiTable({ docgenInfo }: Props) {
         props.map((prop) => {
           const id = `${displayName}_${prop.name}`;
           return (
-            <div key={prop.name} className="prop">
-              <div className="title">
-                <span className="name">
-                  <a id={id} href={`#${id}`} className="api-anchor">
+            <div key={prop.name} className="group/prop border-b border-border py-3 last:border-b-0">
+              <div className="flex flex-wrap items-baseline gap-2">
+                <span className="inline-flex items-baseline gap-1.5 text-base">
+                  <a
+                    id={id}
+                    href={`#${id}`}
+                    className="scroll-mt-24 text-muted-foreground opacity-0 transition-opacity group-hover/prop:opacity-100"
+                  >
                     #
-                  </a>{' '}
-                  <strong>{prop.name}</strong>
+                  </a>
+                  <strong className="font-semibold text-foreground">{prop.name}</strong>
                 </span>
                 {prop.type && (
-                  <span className="typedef">
-                    <code>{prop.type.name}</code>
+                  <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground">
+                    {prop.type.name}
+                  </code>
+                )}
+                {prop.required && (
+                  <span className="inline-flex items-center rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive">
+                    required
                   </span>
                 )}
-                {prop.required && <span className="kind-badge required">required</span>}
               </div>
-              <div className="description">
+              <div className="prose prose-neutral mt-2 max-w-none text-sm dark:prose-invert prose-p:my-1">
                 <Markdown>
                   {`${prop.description}${
                     prop.defaultValue
@@ -131,117 +160,6 @@ export default function ApiTable({ docgenInfo }: Props) {
           );
         })
       )}
-      <style jsx>{`
-        h3 {
-          margin-bottom: 0.5rem;
-          margin-left: -29px;
-          font-weight: 400;
-        }
-        h4 {
-          margin-top: 1rem;
-          margin-bottom: 0.5rem;
-          font-weight: 500;
-          font-size: 16px;
-        }
-        .kind-badge {
-          font-size: 12px;
-          font-weight: 500;
-          padding: 2px 8px;
-          border-radius: 3px;
-          margin-left: 8px;
-        }
-        .kind-badge.hook {
-          background-color: #e3f2fd;
-          color: #1976d2;
-        }
-        .kind-badge.function {
-          background-color: #f3e5f5;
-          color: #7b1fa2;
-        }
-        .kind-badge.required {
-          background-color: #ffebee;
-          color: #c62828;
-        }
-        .source-link {
-          font-size: 14px;
-          font-weight: 400;
-          margin-left: 12px;
-          color: #666;
-          text-decoration: none;
-          opacity: 0.7;
-          transition: opacity 0.2s;
-        }
-        .source-link:hover {
-          opacity: 1;
-          text-decoration: underline;
-        }
-        .doc-description {
-          margin-bottom: 1rem;
-          font-size: 16px;
-        }
-        .doc-description :global(p) {
-          margin: 0.25rem 0;
-        }
-        .return-type {
-          margin-top: 1rem;
-          padding: 0.5rem;
-          background-color: #f5f5f5;
-          border-radius: 4px;
-          font-size: 16px;
-        }
-        .return-type code {
-          font-family: 'Menlo', monospace;
-          background-color: transparent;
-          font-weight: 400;
-        }
-        .prop:last-child {
-          border-bottom: 1px solid #eaeaea;
-        }
-        .prop {
-          padding: 0.5em 0.5em 0.5em 0;
-          line-height: 1.2em;
-          vertical-align: middle;
-        }
-        .export-name-anchor,
-        .api-anchor {
-          opacity: 0;
-          scroll-margin-top: 88px;
-        }
-        .export-name-anchor {
-          display: inline-block;
-          margin-right: 12px;
-        }
-        .title:hover .api-anchor,
-        h3:hover .export-name-anchor {
-          opacity: 1;
-        }
-        .title {
-          font-size: 18px;
-          margin-left: -16px;
-        }
-        .title > :not(:last-child) {
-          margin-right: 6px;
-        }
-        .description {
-          max-width: 720px;
-        }
-        .description > :global(p) {
-          font-size: 18px;
-          margin: 0.25rem 0 0 0;
-        }
-        .typedef code {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu',
-            'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-          background-color: transparent;
-          font-weight: 400;
-          color: grey;
-          padding: 0;
-          font-size: 16px;
-        }
-        .required {
-          color: #fc2e1c;
-        }
-      `}</style>
     </div>
   );
 }

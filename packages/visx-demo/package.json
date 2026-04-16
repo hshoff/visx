@@ -100,7 +100,8 @@
     "topojson-client": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0"
+    "@babel/core": "^7.26.0",
+    "@tailwindcss/typography": "^0.5.15"
   },
   "publishConfig": {
     "access": "public"
