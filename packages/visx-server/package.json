@@ -1,0 +1,41 @@
+{
+  "name": "@visx/server",
+  "version": "0.0.0",
+  "description": "Server-safe visx helpers (pure functions only)",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib",
+    "esm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/airbnb/visx.git"
+  },
+  "keywords": [
+    "visx",
+    "react",
+    "rsc",
+    "server"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/airbnb/visx/issues"
+  },
+  "homepage": "https://github.com/airbnb/visx#readme",
+  "dependencies": {
+    "@visx/kernel": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

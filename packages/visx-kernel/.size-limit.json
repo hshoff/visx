@@ -1,0 +1,8 @@
+[
+  {
+    "name": "@visx/kernel production bundle (gzip)",
+    "path": "esm/index.js",
+    "gzip": true,
+    "limit": "2.1 kB"
+  }
+]

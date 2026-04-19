@@ -39,6 +39,14 @@ jobs:
       - name: Build packages
         run: yarn build
 
+      - name: @visx/kernel checks
+        run: |
+          cd packages/visx-kernel
+          yarn run check:deps
+          yarn run size
+          yarn run analyze:prod
+          yarn run check:pack
+
       - name: Run tests
         run: yarn test
         env:

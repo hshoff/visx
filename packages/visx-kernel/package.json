@@ -1,0 +1,55 @@
+{
+  "name": "@visx/kernel",
+  "version": "1.0.0-alpha.0",
+  "description": "Small, literal primitives for visx hooks and server-safe helpers",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib",
+    "esm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/airbnb/visx.git"
+  },
+  "keywords": [
+    "visx",
+    "react",
+    "visualization"
+  ],
+  "authors": [
+    "@hshoff"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/airbnb/visx/issues"
+  },
+  "homepage": "https://github.com/airbnb/visx#readme",
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "esbuild": "^0.25.0",
+    "size-limit": "^11.2.0"
+  },
+  "scripts": {
+    "analyze:prod": "node ./scripts/checkProdStrip.mjs",
+    "check:deps": "node ./scripts/checkKernelDeps.mjs",
+    "check:pack": "node ./scripts/npmPackCheck.mjs",
+    "size": "size-limit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  }
+}

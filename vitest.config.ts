@@ -41,6 +41,8 @@ export default defineConfig({
       'packages/visx-xychart/vitest.config.ts',
       'packages/visx-visx/vitest.config.ts',
       'packages/visx-vendor/vitest.config.ts',
+      'packages/visx-kernel/vitest.config.ts',
+      'packages/visx-server/vitest.config.ts',
     ],
   },
 });
