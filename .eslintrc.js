@@ -63,6 +63,34 @@ module.exports = {
       },
     },
     {
+      files: './packages/visx-theme/src/**/*.{ts,tsx}',
+      rules: {
+        'no-restricted-globals': [
+          'error',
+          {
+            name: 'window',
+            message: '@visx/theme must remain server-safe (no window).',
+          },
+          {
+            name: 'document',
+            message: '@visx/theme must remain server-safe (no document).',
+          },
+          {
+            name: 'getComputedStyle',
+            message: '@visx/theme must remain server-safe (no getComputedStyle).',
+          },
+          {
+            name: 'matchMedia',
+            message: '@visx/theme must remain server-safe (no matchMedia).',
+          },
+          {
+            name: 'MutationObserver',
+            message: '@visx/theme must remain server-safe (no MutationObserver).',
+          },
+        ],
+      },
+    },
+    {
       files: './packages/visx-demo/**',
       rules: {
         'import/no-unresolved': [

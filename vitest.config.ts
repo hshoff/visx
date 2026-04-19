@@ -40,6 +40,7 @@ export default defineConfig({
       'packages/visx-wordcloud/vitest.config.ts',
       'packages/visx-xychart/vitest.config.ts',
       'packages/visx-visx/vitest.config.ts',
+      'packages/visx-theme/vitest.config.ts',
       'packages/visx-vendor/vitest.config.ts',
     ],
   },

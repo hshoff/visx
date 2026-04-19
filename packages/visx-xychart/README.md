@@ -118,6 +118,10 @@ support missing (`null`) data, and can be rendered vertically or horizontally.
 Default `lightTheme` and `darkTheme` themes are exported from `@visx/xychart` and the utility
 `buildChartTheme` is exported to support easy creation of custom themes.
 
+For new work built on `@visx/axis`, `@visx/grid`, and other primitives, prefer **`@visx/theme`**
+(CSS-variable-first theming). You can convert a `buildChartTheme(...)` result with
+`fromXYChartTheme` from `@visx/theme` while migrating off xychart.
+
 ```ts
 import { buildChartTheme, XYChart } from '@visx/xychart';
 import { TextProps as SVGTextProps } from '@visx/text/lib/Text'; // just for types

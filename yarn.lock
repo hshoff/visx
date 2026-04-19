@@ -4678,6 +4678,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@visx/theme@workspace:*, @visx/theme@workspace:packages/visx-theme":
+  version: 0.0.0-use.local
+  resolution: "@visx/theme@workspace:packages/visx-theme"
+  dependencies:
+    "@types/react": "npm:*"
+  peerDependencies:
+    react: ^16.14.0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0
+  languageName: unknown
+  linkType: soft
+
 "@visx/threshold@workspace:*, @visx/threshold@workspace:packages/visx-threshold":
   version: 0.0.0-use.local
   resolution: "@visx/threshold@workspace:packages/visx-threshold"
@@ -4774,6 +4784,7 @@ __metadata:
     "@visx/scale": "workspace:*"
     "@visx/shape": "workspace:*"
     "@visx/text": "workspace:*"
+    "@visx/theme": "workspace:*"
     "@visx/threshold": "workspace:*"
     "@visx/tooltip": "workspace:*"
     "@visx/voronoi": "workspace:*"
