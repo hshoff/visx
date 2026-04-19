@@ -3,8 +3,9 @@ import { lightTheme } from '../tokens/light';
 import type { VisxTheme } from '../tokens/types';
 
 /**
- * Structural match for @visx/xychart's XYChartTheme (accepts `buildChartTheme` output).
- * Kept local so @visx/theme does not depend on @visx/xychart.
+ * Minimal subset of xychart’s `XYChartTheme` that `fromXYChartTheme` reads.
+ * Defined locally so `@visx/theme` stays free of `@visx/xychart` (no peer dep).
+ * At the call site, `buildChartTheme(...)` output is accepted via structural typing.
  */
 export type XYChartThemeInput = {
   backgroundColor: string;
@@ -30,7 +31,10 @@ function normalizeCategorical(colors: string[]): string[] {
   return out;
 }
 
-/** One-way migration adapter from @visx/xychart XYChartTheme to VisxTheme. */
+/**
+ * One-way migration from xychart’s theme object to `VisxTheme`.
+ * Parameter type is structural — pass `buildChartTheme(...)` without importing types from `@visx/xychart`.
+ */
 export function fromXYChartTheme(legacy: XYChartThemeInput): VisxTheme {
   const gridStroke =
     typeof legacy.gridStyles.stroke === 'string'
