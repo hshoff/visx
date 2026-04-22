@@ -1,19 +1,30 @@
-import { useMemo } from 'react';
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import {
+  prepareWithSegments,
+  layoutWithLines,
+  type PreparedTextWithSegments,
+  type LayoutLine,
+} from '@chenglou/pretext';
 import reduceCSSCalc from 'reduce-css-calc';
+import type { CSSProperties } from 'react';
 import type { TextProps, WordsWithWidth } from '../types';
-import getStringWidth from '../util/getStringWidth';
+import buildFontString from '../util/buildFontString';
+import parseLineHeight from '../util/parseLineHeight';
 
 function isNumber(val: unknown): val is number {
   return typeof val === 'number';
 }
 
 function isXOrYInValid(xOrY: string | number | undefined) {
-  return (
-    // number that is not NaN or Infinity
-    (typeof xOrY === 'number' && Number.isFinite(xOrY)) ||
-    // for percentage
-    typeof xOrY === 'string'
-  );
+  return (typeof xOrY === 'number' && Number.isFinite(xOrY)) || typeof xOrY === 'string';
+}
+
+const WORD_SPLIT_RE = /(?:(?!\u00A0+)\s+)/;
+
+function splitWordsForTspan(lineText: string): string[] {
+  return lineText.split(WORD_SPLIT_RE);
 }
 
 export default function useText(props: TextProps): {
@@ -27,80 +38,96 @@ export default function useText(props: TextProps): {
     angle,
     width,
     lineHeight = '1em',
-    capHeight = '0.71em', // Magic number from d3
+    capHeight = '0.71em',
     children,
     style,
+    fontSize,
+    fontFamily,
     ...textProps
   } = props;
 
   const { x = 0, y = 0 } = textProps;
   const isXOrYNotValid = !isXOrYInValid(x) || !isXOrYInValid(y);
 
-  const { wordsWithWidth, spaceWidth } = useMemo(() => {
-    const words: string[] = children == null ? [] : children.toString().split(/(?:(?!\u00A0+)\s+)/);
-    return {
-      wordsWithWidth: words.map((word) => ({
-        word,
-        wordWidth: getStringWidth(word, style) || 0,
-      })),
-      spaceWidth: getStringWidth('\u00A0', style) || 0,
-    };
-  }, [children, style]);
+  const textContent = children == null ? '' : children.toString();
 
-  const wordsByLines = useMemo(() => {
-    if (isXOrYNotValid) {
+  const measurementStyle = useMemo((): CSSProperties => {
+    const merged: CSSProperties = { ...(style ?? {}) };
+    if (fontSize !== undefined) merged.fontSize = fontSize;
+    if (fontFamily !== undefined) merged.fontFamily = fontFamily;
+    return merged;
+  }, [style, fontSize, fontFamily]);
+
+  const fontString = useMemo(() => buildFontString(measurementStyle), [measurementStyle]);
+
+  const [prepared, setPrepared] = useState<PreparedTextWithSegments | null>(null);
+
+  useEffect(() => {
+    if (!textContent) {
+      setPrepared(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    try {
+      const handle = prepareWithSegments(textContent, fontString);
+      if (!cancelled) {
+        setPrepared(handle);
+      }
+    } catch {
+      if (!cancelled) {
+        setPrepared(null);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [textContent, fontString]);
+
+  const wordsByLines = useMemo((): WordsWithWidth[] => {
+    if (isXOrYNotValid || !textContent) {
       return [];
     }
 
-    // Only perform calculations if using features that require them (multiline, scaleToFit)
-    if (width || scaleToFit) {
-      return wordsWithWidth.reduce((result: WordsWithWidth[], { word, wordWidth }) => {
-        const currentLine = result[result.length - 1];
-
-        if (
-          currentLine &&
-          (width == null || scaleToFit || (currentLine.width || 0) + wordWidth + spaceWidth < width)
-        ) {
-          // Word can be added to an existing line
-          currentLine.words.push(word);
-          currentLine.width = currentLine.width || 0;
-          currentLine.width += wordWidth + spaceWidth;
-        } else {
-          // Add first word to line or word is too long to scaleToFit on existing line
-          const newLine = { words: [word], width: wordWidth };
-          result.push(newLine);
-        }
-
-        return result;
-      }, []);
+    // SSR / first client render: no prepared handle yet → single-line fallback
+    if (!prepared) {
+      return [{ words: textContent.split(WORD_SPLIT_RE), width: undefined }];
     }
 
-    return [
-      {
-        words: children == null ? [] : children.toString().split(/(?:(?!\u00A0+)\s+)/),
-      },
-    ];
-  }, [isXOrYNotValid, width, scaleToFit, children, wordsWithWidth, spaceWidth]);
+    if (!width && !scaleToFit) {
+      return [{ words: textContent.split(WORD_SPLIT_RE), width: undefined }];
+    }
+
+    // When scaleToFit is set, legacy behavior keeps the entire string on one line
+    // and applies a matrix() so that line fits `width`; wrapping is disabled.
+    const maxWidth = width == null || scaleToFit ? Number.POSITIVE_INFINITY : width;
+    const lineHeightPx = parseLineHeight(lineHeight, measurementStyle);
+    const { lines } = layoutWithLines(prepared, maxWidth, lineHeightPx);
+
+    return lines.map((line: LayoutLine) => ({
+      words: splitWordsForTspan(line.text),
+      width: line.width,
+    }));
+  }, [isXOrYNotValid, textContent, prepared, width, scaleToFit, lineHeight, measurementStyle]);
 
   const startDy = useMemo(() => {
-    const startDyStr = isXOrYNotValid
-      ? ''
-      : verticalAnchor === 'start'
-      ? reduceCSSCalc(`calc(${capHeight})`)
-      : verticalAnchor === 'middle'
-      ? reduceCSSCalc(
-          `calc(${(wordsByLines.length - 1) / 2} * -${lineHeight} + (${capHeight} / 2))`,
-        )
-      : reduceCSSCalc(`calc(${wordsByLines.length - 1} * -${lineHeight})`);
-
-    return startDyStr;
+    if (isXOrYNotValid) return '';
+    if (verticalAnchor === 'start') {
+      return reduceCSSCalc(`calc(${capHeight})`);
+    }
+    if (verticalAnchor === 'middle') {
+      return reduceCSSCalc(
+        `calc(${(wordsByLines.length - 1) / 2} * -${lineHeight} + (${capHeight} / 2))`,
+      );
+    }
+    return reduceCSSCalc(`calc(${wordsByLines.length - 1} * -${lineHeight})`);
   }, [isXOrYNotValid, verticalAnchor, capHeight, wordsByLines.length, lineHeight]);
 
   const transform = useMemo(() => {
     const transforms: string[] = [];
-    if (isXOrYNotValid) {
-      return '';
-    }
+    if (isXOrYNotValid) return '';
 
     if (isNumber(x) && isNumber(y) && isNumber(width) && scaleToFit && wordsByLines.length > 0) {
       const lineWidth = wordsByLines[0].width || 1;
@@ -110,6 +137,7 @@ export default function useText(props: TextProps): {
       const originY = y - sy * y;
       transforms.push(`matrix(${sx}, 0, 0, ${sy}, ${originX}, ${originY})`);
     }
+
     if (angle) {
       transforms.push(`rotate(${angle}, ${x}, ${y})`);
     }

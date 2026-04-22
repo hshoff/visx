@@ -1,32 +1,39 @@
-import memoize from 'lodash/memoize';
+'use client';
 
-const MEASUREMENT_ELEMENT_ID = '__react_svg_text_measurement_id';
+import { prepareWithSegments, measureNaturalWidth } from '@chenglou/pretext';
+import type { CSSProperties } from 'react';
+import buildFontString from './buildFontString';
 
-function getStringWidth(str: string, style?: object) {
+const cache = new Map<string, number>();
+
+/** Clears the module-level width cache used by {@link getStringWidth}. */
+export function clearStringWidthCache() {
+  cache.clear();
+}
+
+/**
+ * Measures the rendered width of a string.
+ *
+ * Uses Pretext's Canvas-based measurement instead of DOM
+ * `getComputedTextLength()`. The function is synchronous and requires a
+ * browser environment (Canvas API or OffscreenCanvas).
+ *
+ * @returns width in pixels, or null if measurement is unavailable
+ */
+export default function getStringWidth(str: string, style?: CSSProperties): number | null {
+  if (typeof str !== 'string' || !str) return null;
+
+  const fontString = buildFontString(style);
+  const cacheKey = `${str}\0${fontString}`;
+
+  if (cache.has(cacheKey)) return cache.get(cacheKey)!;
+
   try {
-    // Calculate length of each word to be used to determine number of words per line
-    let textEl = document.getElementById(MEASUREMENT_ELEMENT_ID) as SVGTextElement | null;
-    if (!textEl) {
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('aria-hidden', 'true');
-      svg.style.width = '0';
-      svg.style.height = '0';
-      svg.style.position = 'absolute';
-      svg.style.top = '-100%';
-      svg.style.left = '-100%';
-      textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textEl.setAttribute('id', MEASUREMENT_ELEMENT_ID);
-      svg.appendChild(textEl);
-      document.body.appendChild(svg);
-    }
-
-    Object.assign(textEl.style, style);
-    textEl.textContent = str;
-    return textEl.getComputedTextLength();
-  } catch (e) {
-    console.warn(e);
+    const prepared = prepareWithSegments(str, fontString);
+    const width = measureNaturalWidth(prepared);
+    cache.set(cacheKey, width);
+    return width;
+  } catch {
     return null;
   }
 }
-
-export default memoize(getStringWidth, (str, style) => `${str}_${JSON.stringify(style)}`);

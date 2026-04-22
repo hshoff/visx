@@ -6,7 +6,7 @@ export default defineConfig({
     name: '@visx/text',
     globals: true,
     environment: 'jsdom',
-    setupFiles: [],
+    setupFiles: ['./test/setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['lcov', 'json-summary', 'html', 'json', 'text'],
