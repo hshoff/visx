@@ -15,11 +15,20 @@ describe('parseLineHeight', () => {
     expect(parseLineHeight('1.5em', { fontSize: '20px' })).toBe(30);
   });
 
-  it('uses 16px base for em when font size is missing', () => {
-    expect(parseLineHeight('1em')).toBe(16);
+  it('uses element font size for unitless values', () => {
+    expect(parseLineHeight('1.5', { fontSize: 20 })).toBe(30);
+    expect(parseLineHeight('1.5')).toBe(24);
   });
 
-  it('treats bare numbers as multiples of 16px', () => {
-    expect(parseLineHeight('1.5')).toBe(24);
+  it('parses rem against a 16px root', () => {
+    expect(parseLineHeight('1.5rem')).toBe(24);
+  });
+
+  it('parses percentage of font size', () => {
+    expect(parseLineHeight('150%', { fontSize: 20 })).toBe(30);
+  });
+
+  it('parses lh relative to font size', () => {
+    expect(parseLineHeight('1.5lh', { fontSize: 20 })).toBe(30);
   });
 });

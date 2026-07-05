@@ -10,13 +10,16 @@ import type { CSSProperties } from 'react';
 export default function buildFontString(style?: CSSProperties): string {
   if (!style) return '16px sans-serif';
 
+  if (style.font) {
+    return String(style.font);
+  }
+
   const parts: string[] = [];
 
   if (style.fontStyle) parts.push(String(style.fontStyle));
   if (style.fontVariant) parts.push(String(style.fontVariant));
   if (style.fontWeight) parts.push(String(style.fontWeight));
 
-  // Font size — default to 16px if not specified
   const fontSize = style.fontSize
     ? typeof style.fontSize === 'number'
       ? `${style.fontSize}px`
@@ -24,7 +27,6 @@ export default function buildFontString(style?: CSSProperties): string {
     : '16px';
   parts.push(fontSize);
 
-  // Font family — default to sans-serif
   const fontFamily = style.fontFamily || 'sans-serif';
   parts.push(String(fontFamily));
 

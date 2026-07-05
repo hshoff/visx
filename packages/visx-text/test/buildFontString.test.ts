@@ -6,6 +6,10 @@ describe('buildFontString', () => {
     expect(buildFontString()).toBe('16px sans-serif');
   });
 
+  it('uses style.font shorthand when provided', () => {
+    expect(buildFontString({ font: 'bold 14px Arial' })).toBe('bold 14px Arial');
+  });
+
   it('includes font style, variant, weight, size, and family', () => {
     expect(
       buildFontString({

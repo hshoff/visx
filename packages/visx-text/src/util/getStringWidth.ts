@@ -4,11 +4,22 @@ import { prepareWithSegments, measureNaturalWidth } from '@chenglou/pretext';
 import type { CSSProperties } from 'react';
 import buildFontString from './buildFontString';
 
+const MAX_CACHE_SIZE = 2048;
 const cache = new Map<string, number>();
 
 /** Clears the module-level width cache used by {@link getStringWidth}. */
 export function clearStringWidthCache() {
   cache.clear();
+}
+
+function setCachedWidth(key: string, width: number) {
+  if (cache.size >= MAX_CACHE_SIZE) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) {
+      cache.delete(oldest);
+    }
+  }
+  cache.set(key, width);
 }
 
 /**
@@ -31,9 +42,10 @@ export default function getStringWidth(str: string, style?: CSSProperties): numb
   try {
     const prepared = prepareWithSegments(str, fontString);
     const width = measureNaturalWidth(prepared);
-    cache.set(cacheKey, width);
+    setCachedWidth(cacheKey, width);
     return width;
-  } catch {
+  } catch (error) {
+    console.warn('@visx/text: getStringWidth measurement unavailable', error);
     return null;
   }
 }

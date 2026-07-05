@@ -20,7 +20,9 @@ This package is marked with the `'use client'` directive so it can be imported f
 
 For pixel-identical wrapped output during SSR, use a Node Canvas implementation (for example `@napi-rs/canvas`) and run Pretext’s `prepareWithSegments` in that environment; that is an advanced integration, not the default.
 
-Test environments without a working Canvas 2D context (plain jsdom) should stub `HTMLCanvasElement.prototype.getContext('2d')` or install a canvas polyfill. Pretext also exposes `clearCache()` (re-exported as `clearPretextCache` from this package) for clearing shared layout caches between tests.
+Test environments without a working Canvas 2D context (plain jsdom) should stub `HTMLCanvasElement.prototype.getContext('2d')` or install a canvas polyfill. Pretext also exposes `clearCache()` (re-exported as `clearPretextCache` from this package) for clearing shared layout caches between tests. `getStringWidth` exposes `clearStringWidthCache()` for its module cache.
+
+`@chenglou/pretext` is published as ESM; bundlers and Node versions that `require()` CJS without transpiling dependencies may need additional configuration.
 
 ## Example
 

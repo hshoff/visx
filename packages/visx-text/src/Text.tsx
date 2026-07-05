@@ -33,7 +33,7 @@ export default function Text(props: TextProps) {
         <text ref={innerTextRef} transform={transform} {...textProps} textAnchor={textAnchor}>
           {wordsByLines.map((line, index) => (
             <tspan key={index} x={x} dy={index === 0 ? startDy : lineHeight}>
-              {line.words.join(' ')}
+              {line.text ?? line.words.join(' ')}
             </tspan>
           ))}
         </text>

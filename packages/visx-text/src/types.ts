@@ -50,5 +50,7 @@ export type compareFunction<T> = (prev: T | undefined, next: T) => boolean;
 
 export interface WordsWithWidth {
   words: string[];
+  /** Full line text from the layout engine; preferred for rendering when set. */
+  text?: string;
   width?: number;
 }
