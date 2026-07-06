@@ -30,7 +30,7 @@
   ],
   "private": true,
   "scripts": {
-    "build:vendor": "yarn run ts ./packages/visx-vendor/scripts/buildVendor",
+    "benchmark:line-render-10k": "yarn workspace @visx/benchmark-line-render-10k dev",
     "babel": "yarn run babel:cjs && yarn run babel:esm",
     "babel:cjs": "lerna exec --ignore '@visx/{demo,vendor}' --parallel -- babel --root-mode upward --delete-dir-on-start src/ --out-dir lib --extensions .ts,.tsx",
     "babel:esm": "ESM=true lerna exec --ignore '@visx/{demo,vendor}' --parallel -- babel --root-mode upward --delete-dir-on-start src/ --out-dir esm --extensions .ts,.tsx",
@@ -110,7 +110,8 @@
   "packageManager": "yarn@4.10.3",
   "workspaces": {
     "packages": [
-      "./packages/*"
+      "./packages/*",
+      "./benchmarks/*"
     ]
   },
   "resolutions": {

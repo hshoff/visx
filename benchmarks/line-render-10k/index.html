@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Line render 10k — chart benchmark</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Monaco,
+          Consolas,
+          'Liberation Mono',
+          'Courier New',
+          monospace;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #0b0b0c;
+        color: #f4f4f5;
+      }
+
+      h1 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 8px;
+      }
+
+      p {
+        color: #a1a1aa;
+        font-size: 13px;
+        line-height: 1.5;
+        max-width: 72ch;
+      }
+
+      #root {
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Line render 10k</h1>
+    <p>
+      Reproduction of
+      <a href="https://x.com/colmtuite/status/2073092169783541785" style="color: #93c5fd"
+        >Colm Tuite&rsquo;s line chart benchmark</a
+      >
+      measuring initial render time for a single line series with 10,000 points. Uses DOM-settle
+      timing (mutation quiet window) with warmup iterations and IQR outlier removal.
+    </p>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

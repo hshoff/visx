@@ -1,0 +1,41 @@
+{
+  "name": "@visx/benchmark-line-render-10k",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Line chart render benchmark — 10k points across charting libraries",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "bench": "playwright test",
+    "bench:ui": "vite --open"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.0",
+    "@mui/x-charts": "^8.5.0",
+    "@react-spring/web": "^10.0.3",
+    "@visx/axis": "workspace:*",
+    "@visx/group": "workspace:*",
+    "@visx/scale": "workspace:*",
+    "@visx/shape": "workspace:*",
+    "@visx/xychart": "workspace:*",
+    "ag-charts-community": "^11.3.0",
+    "ag-charts-react": "^11.3.0",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.3.0"
+  }
+}

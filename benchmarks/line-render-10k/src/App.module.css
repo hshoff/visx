@@ -1,0 +1,69 @@
+.layout {
+  display: grid;
+  gap: 24px;
+}
+
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.button {
+  appearance: none;
+  border: 1px solid #3f3f46;
+  background: #18181b;
+  color: #fafafa;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: #27272a;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.progress {
+  color: #a1a1aa;
+  font-size: 13px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e4e4e7;
+}
+
+.table {
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+  background: #111113;
+  border: 1px solid #27272a;
+  overflow: auto;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.mountHost {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 500px;
+  height: 300px;
+  pointer-events: none;
+  visibility: hidden;
+}
