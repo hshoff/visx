@@ -40,11 +40,14 @@ All charts use the same synthetic dataset (`y = 50 + sin(x / 5) * 25`), dimensio
 From the repo root:
 
 ```bash
+corepack enable
 yarn install
 yarn benchmark:line-render-10k
 ```
 
 This starts the interactive benchmark UI at http://localhost:5180. Click **Run benchmark** to measure all libraries on your machine.
+
+> **Note:** visx packages are resolved from workspace source via Vite aliases — no `yarn build` step is required. If you see resolution errors for `@visx/*` packages, pull the latest branch; the Vite config auto-discovers all workspace packages.
 
 ### Headless (Playwright)
 
